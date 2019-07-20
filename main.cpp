@@ -3,17 +3,28 @@
 #include "vlog.h"
 #include "verror.h"
 #include "vcat_containers.h"
-#include "s11n_introspection.h"
+//#include "impl/name_of_type_from_pf.h"
+#include "impl/serializer.h"
+#include "s11n_serial.h"
+#include "s11n_size.h"
 #include "vstring.h"
 
-class AAA {};
+struct AAA { int i, j; };
 
 template<typename T>
 class BBB : public AAA {};
 
 
+
 using namespace s11n;
 using namespace std;
+
+template<>
+struct s11n::Serial<AAA>
+{
+    static std::tuple<int,int> as_tuple(const AAA& a)
+    { return std::make_tuple(a.i,a.j); }
+};
 
 
 int main()
@@ -23,6 +34,29 @@ int main()
     vdeb << is_same<char,int8_t>::value;    //  true    false   false
     vdeb << is_same<char,uint8_t>::value;   //  false   true    false
 
+    //vdeb << s11n::impl::name_of_type_from_PF<BBB<int>>().str();
+
+    vdeb << s11n::name_of_type<bool>().str();
+
+    s11n::impl::Serializer s;
+    s.put(true);
+    s.put(false);
+    s.put(42);
+    s.put(43.6);
+
+    s11n::impl::Deserializer d(s.res);
+    vdeb << d.get<bool>();
+    vdeb << d.get<bool>();
+    vdeb << d.get<int>();
+    vdeb << d.get<double>();
+
+    s.res.clear();
+    auto rr = Serial<Size>::serialize(s, Size(42)).res;
+    vdeb;
+
+//    s11n::impl::Deserializer d( "ololol" );
+//    vdeb << d.get<char>();
+//    vdeb << d.get<int16_t>();
 
 //    vdeb << s11n::name_of_type_from_PF<AAA>().str();
 //    vdeb << s11n::name_of_type_from_PF<BBB<int>>().str();
