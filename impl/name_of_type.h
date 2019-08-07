@@ -1,20 +1,52 @@
-#ifndef NAME_OF_TYPE_H
-#define NAME_OF_TYPE_H
+#pragma once
 
 #include "impl/str_view.h"
 #include "impl/name_of_type_from_pf.h"
 
+
+//=======================================================================================
+//      name_of_type: введен для поправки имени типа, если, по какой-то причине, с этим
+//  не справился самовывод. Например, если не подправить имя для std::string, то
+//  имя выводится примерно так: "std::__cxx11::basic_string<char>".
+//
+//  NB! Работа была проверена только на компиляторе gcc!!! Для других компиляторов
+//  не знаю, но если узнаю, допилю.
+//
+//  Чтобы поправить имя, следует определить соответствующее статическое поле:
+//  template <>
+//  struct s11n::Serial<std::string>
+//  {
+//      static constexpr auto name_of_type = "std::string";
+//  };
+//
+//  Если поля нету, то имя типа будет выводится:
+//
+//   - для арифметических типов: вида bool, char, intN, uintN, floatN, где N -- размер
+//     в битах;
+//
+//   - для остальных -- через парсинг результата жизнедеятельности макроса
+//     __PRETTY_FUNCTION__.
+//
+//=======================================================================================
+namespace s11n {
+namespace impl
+{
+    template <typename T> constexpr
+    impl::str_view name_of_type();
+}}
+//=======================================================================================
+
+
+
+//=======================================================================================
+//      Implementation
 //=======================================================================================
 namespace s11n
 {
-    template <typename T>
-    struct Serial;
-} // namespace s11n
+    template <typename T> struct Serial;
+}
 //=======================================================================================
-
-
-
-//=======================================================================================
+//
 namespace s11n {
 namespace impl
 {
@@ -23,7 +55,7 @@ namespace impl
     //
     template <typename T>
     constexpr const typename std::enable_if< std::is_arithmetic<T>::value,
-    impl::str_view>::type name_of_type()
+    impl::str_view>::type _name_of_type()
     {
         static_assert( sizeof(bool)   == 1, "sizeof(bool)   != 1" );
         static_assert( sizeof(char)   == 1, "sizeof(char)   != 1" );
@@ -69,25 +101,24 @@ namespace impl
         : std::true_type
     {};
     //-----------------------------------------------------------------------------------
-    template<typename T> static constexpr
+    template<typename T> constexpr
     bool has_serial_name_of_type()
     {
         return _has_serial_name_of_type<T>::value;
     }
     //-----------------------------------------------------------------------------------
-    template <typename T>
-    static constexpr typename
+    template <typename T> constexpr typename
     std::enable_if
     <
         has_serial_name_of_type<T>(),
         impl::str_view
     >::type
-    name_of_type()
+    _name_of_type()
     {
         return
         {
             s11n::Serial<T>::name_of_type,
-            index_of(s11n::Serial<T>::name_of_type,'\0')
+            length( s11n::Serial<T>::name_of_type )
         };
     }
     //===================================================================================
@@ -95,21 +126,25 @@ namespace impl
     //===================================================================================
     //      Elsewhere extract name_of_type from __PRETTY_FUNCTION__
     //
-    template <typename T>
-    static constexpr typename
+    template <typename T> constexpr typename
     std::enable_if
     <
         !has_serial_name_of_type<T>() && !std::is_arithmetic<T>::value,
         impl::str_view
     >::type
-    name_of_type()
+    _name_of_type()
     {
         return name_of_type_from_PF<T>();
     }
     //===================================================================================
 
+    //===================================================================================
+    template <typename T> constexpr
+    impl::str_view name_of_type()
+    {
+        return _name_of_type<T>();
+    }
+    //===================================================================================
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
-
-#endif // NAME_OF_TYPE_H

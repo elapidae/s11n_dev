@@ -67,6 +67,7 @@ namespace s11n
     };
 }
 
+
 namespace s11n
 {
     template <typename T>
@@ -90,7 +91,7 @@ namespace s11n
     template<>
     struct Serial<std::string>
     {
-        static constexpr auto name_of_type = "std::string";
+//        static constexpr auto name_of_type = "std::string";
 
         static void serialize( impl::Serializer* ser, const std::string& str )
         {
@@ -107,6 +108,17 @@ namespace s11n
 }
 
 
+struct CRC_Check
+{};
+
+namespace s11n
+{
+    template <>
+    struct Serial<CRC_Check>
+    {
+        static constexpr auto name_of_type = "123456789";
+    };
+}
 
 
 template <typename T>
@@ -115,12 +127,51 @@ void print_T_crc()
     auto c1 = crc<T>();
     auto c2 = poly_04C11DB7( signature<T>() );
 
-    vdeb << "CRC:" << c1 << c2 << signature<T>();
+    vdeb.hex() << "CRC:" << c1 << c2 << signature<T>();
     assert(c1 == c2);
 }
 
+
+
+template <typename T, typename = void>
+struct _has_value_type : public std::false_type
+{};
+
+template <typename T>
+struct _has_value_type<T, std::void_t<typename T::value_type> >
+    : public std::true_type
+{};
+
+template <typename T>
+static constexpr bool has_value_type()
+{
+    return _has_value_type<T>::value;
+}
+
+
+template <typename T, typename = void>
+struct _has_mapped_type : public std::false_type
+{};
+
+template <typename T>
+struct _has_mapped_type<T, std::void_t<typename T::mapped_type> >
+    : public std::true_type
+{};
+
+template <typename T>
+static constexpr bool has_mapped_type()
+{
+    return _has_value_type<T>::value;
+}
+
+
+
+
 int main()
 {
+    print_T_crc<std::string>();
+    return 0;
+    print_T_crc<CRC_Check>();
     print_T_crc<int>();
     print_T_crc<AAA>();
     print_T_crc<BBB>();
@@ -129,13 +180,13 @@ int main()
     print_T_crc<std::tuple<>>();
     print_T_crc<T4>();
     print_T_crc<DDD>();
-    return 0;
+    //return 0;
 
     vdeb << signature<std::string>();
     vdeb << signature<std::unordered_map<int,int>>();
     vdeb << signature<std::unordered_set<int>>();
     //std::void_t<> ddd;
-    return 0;
+    //return 0;
     //vdeb << signature<DDD>();
 
     vdeb << "============ has serial tuple:";
@@ -154,10 +205,10 @@ int main()
     vdeb << name_of_type<BBB>();
 
     vdeb << "============ Descriptions in squares:";
-    vdeb << description_in_squares<int>();
-    vdeb << description_in_squares<AAA>();
-    vdeb << description_in_squares<BBB>();
-    vdeb << description_in_squares<CCC>();
+    vdeb << description_in_squares_str<int>();
+    vdeb << description_in_squares_str<AAA>();
+    vdeb << description_in_squares_str<BBB>();
+    vdeb << description_in_squares_str<CCC>();
 
     print_plain_name_of_type();
 

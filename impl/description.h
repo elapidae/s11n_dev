@@ -1,26 +1,54 @@
-#ifndef DESCRIPTION_H
-#define DESCRIPTION_H
+#pragma once
+
 
 #include "impl/str_view.h"
 #include <array>
 
+
 //=======================================================================================
+//      description: введена с целью ведения версионности, изменений типов.
+//
+//  Если в перегрузке есть соотвествующее поле:
+//  template <>
+//  struct s11n::Serial<SomeType>
+//  {
+//      static constexpr auto description = "some words, ver. 1";
+//  };
+//  , то в сигнатуру типа описание войдет в скобочках: "SomeType(some words, ver. 1)".
+//  Если такого поля нету, то описания не будет.
+//=======================================================================================
+namespace s11n {
+namespace impl
+{
+    template <typename T> constexpr
+    impl::str_view description();
+
+    template <typename T> constexpr
+    std::array<impl::str_view,3> description_in_squares();
+
+    template <typename T>
+    std::string description_in_squares_str();
+
+}} // s11n::impl namespaces
+//=======================================================================================
+
+
+
+//=======================================================================================
+//      Implementation
+//=======================================================================================
+//      Need forward declaration
 namespace s11n
 {
-    template <typename T>
-    struct Serial;
-} // namespace s11n
+    template <typename T> struct Serial;
+}
 //=======================================================================================
 
-
-
-//=======================================================================================
 namespace s11n {
 namespace impl
 {
     //===================================================================================
     //      Serial<T>::description deduction
-    //
     template<typename T, typename = void>
     struct _has_serial_description
         : std::false_type
@@ -35,20 +63,20 @@ namespace impl
         : std::true_type
     {};
     //-----------------------------------------------------------------------------------
-    template<typename T> static constexpr
+    template<typename T> constexpr
     bool has_serial_description()
     {
         return _has_serial_description<T>::value;
     }
-    //-----------------------------------------------------------------------------------
-    template <typename T>
-    static constexpr typename
-    std::enable_if
-    <
-        has_serial_description<T>(),
-        impl::str_view
-    >::type
-    description()
+    //===================================================================================
+
+
+    //===================================================================================
+    //
+    //  Без if constexpr, в 11-ом свернуть нельзя.
+    template <typename T> constexpr typename
+    std::enable_if< has_serial_description<T>(), impl::str_view>::type
+    _description()
     {
         return
         {
@@ -57,47 +85,37 @@ namespace impl
         };
     }
     //===================================================================================
-
-    //===================================================================================
-    //      Elsewhere description is empty
-    //
-    template <typename T>
-    static constexpr typename
-    std::enable_if
-    <
-        !has_serial_description<T>(),
-        impl::str_view
-    >::type
-    description()
+    template <typename T> constexpr typename
+    std::enable_if< !has_serial_description<T>(), impl::str_view >::type
+    _description()
     {
-        return {"",0};
+        return {};
+    }
+    //===================================================================================
+    template <typename T>
+    constexpr impl::str_view description()
+    {
+        return _description<T>();
     }
     //===================================================================================
 
     //===================================================================================
-    template <typename T>
-    static constexpr
+    template <typename T> constexpr
     std::array<impl::str_view,3> description_in_squares()
     {
         using sv = impl::str_view;
         return description<T>().len == 0
-                ? std::array<sv,3>{ sv{"",0}, sv{"",0}, sv{"",0} }
+                ? std::array<sv,3>{ sv{}, sv{}, sv{} }
                 : std::array<sv,3>{ sv{"(",1}, description<T>(), sv{")",1} };
     }
     //===================================================================================
     template <typename T>
-    static std::string description_in_squares_str()
+    std::string description_in_squares_str()
     {
         auto d = description_in_squares<T>();
         return d[0].str() + d[1].str() + d[2].str();
     }
     //===================================================================================
-    //      debug only, need to kill...
-    std::ostream& operator << (std::ostream& os, const std::array<str_view,3>& ar);
-    //===================================================================================
-
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
-
-#endif // DESCRIPTION_H

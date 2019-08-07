@@ -3,12 +3,12 @@
 namespace s11n {
 namespace impl {
 
-std::ostream &operator <<(std::ostream &os, const std::array<str_view,3> &ar)
-{
-    for (auto &val: ar)
-        os << val;
-    return os;
-}
+//std::ostream &operator <<(std::ostream &os, const std::array<str_view,3> &ar)
+//{
+//    for (auto &val: ar)
+//        os << val;
+//    return os;
+//}
 
 //    template<size_t sz>
 //    std::ostream &operator << (std::ostream &os, const std::array<str_view, sz> &ar)
