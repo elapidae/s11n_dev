@@ -170,7 +170,7 @@ static constexpr bool has_mapped_type()
 int main()
 {
     print_T_crc<std::string>();
-    return 0;
+
     print_T_crc<CRC_Check>();
     print_T_crc<int>();
     print_T_crc<AAA>();
@@ -180,14 +180,10 @@ int main()
     print_T_crc<std::tuple<>>();
     print_T_crc<T4>();
     print_T_crc<DDD>();
-    //return 0;
 
     vdeb << signature<std::string>();
     vdeb << signature<std::unordered_map<int,int>>();
     vdeb << signature<std::unordered_set<int>>();
-    //std::void_t<> ddd;
-    //return 0;
-    //vdeb << signature<DDD>();
 
     vdeb << "============ has serial tuple:";
     vdeb << has_serial_tuple<int>();

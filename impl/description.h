@@ -1,9 +1,18 @@
 #pragma once
 
 
-#include "impl/str_view.h"
+#include <type_traits>
 #include <array>
+#include "impl/str_view.h"
 
+
+#ifndef void_t
+    namespace std
+    {
+        template< class... >
+        using void_t = void;
+    }
+#endif
 
 //=======================================================================================
 //      description: введена с целью ведения версионности, изменений типов.

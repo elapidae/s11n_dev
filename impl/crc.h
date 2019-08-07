@@ -135,19 +135,19 @@ namespace impl
     //===================================================================================
 
     //===================================================================================
-    //
+    //  Пошаговое вычисление CRC
     constexpr uint32_t _crc_ch_step( char ch, uint32_t prev )
     {
         return (prev >> 8) ^ _poly_04C11DB7_table[ uint8_t(uint8_t(prev)^uint8_t(ch)) ];
     }
-    //
+    //  Итерации внутри строки.
     constexpr uint32_t _crc_ch_recurse( const str_view& sw, uint pos, uint32_t prev )
     {
         return pos == sw.len
                     ? prev
                     : _crc_ch_recurse( sw, pos + 1, _crc_ch_step( sw.ptr[pos],prev) );
     }
-    //
+    //  Считаем всю строку целиком.
     constexpr uint32_t _crc_str( const str_view& sw, uint32_t prev )
     {
         return _crc_ch_recurse( sw, 0, prev );

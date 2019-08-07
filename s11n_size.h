@@ -2,8 +2,8 @@
 #define S11N_SIZE_H
 
 #include <cstddef>
-#include "../s11n/impl/str_view.h"
-#include "../s11n/impl/serializer.h"
+#include "impl/str_view.h"
+#include "impl/serializer.h"
 
 
 namespace s11n {

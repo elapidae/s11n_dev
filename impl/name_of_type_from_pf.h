@@ -8,8 +8,8 @@ namespace s11n {
 namespace impl
 {
     //===================================================================================
-    template <typename T>
-    static constexpr const str_view name_of_type_from_PF();
+    template <typename T> constexpr
+    str_view name_of_type_from_PF();
     //===================================================================================
 } // namespace impl
 } // namespace s11n
@@ -33,8 +33,8 @@ namespace impl
     //      __PRETTY_FUNCTION__, в ней, так или иначе, хранится имя типа.
     //      Дальнейшая задача -- выковырять это имя в compile-time.
     //
-    template <typename T>
-    static constexpr const str_view name_of_type_from_PF()
+    template <typename T> constexpr
+    str_view name_of_type_from_PF()
     {
         return
         {
@@ -52,7 +52,7 @@ namespace impl
     //  Дальнейшее извлечение будет вычитать эту строку из начала.
     //
     template <typename T>
-    static constexpr const char * _sign_T_PRETTY_FUNC()
+    constexpr const char * _sign_T_PRETTY_FUNC()
     {
         return __PRETTY_FUNCTION__;
     }
@@ -66,8 +66,8 @@ namespace impl
     //  Возвращает указатель, следующий за паттерном.
     //  По идее, должен проверять правильность паттерна вначале. Пока не знаю как
     //  это реализовать в 11-м стандарте.
-    static constexpr const char* _advance_along_substr( const char* src,
-                                                        const char* pattern )
+    constexpr const char* _advance_along_substr( const char* src,
+                                                 const char* pattern )
     {
         // cannot do: static_assert( *src == *pattern, "" );
         return *pattern == '\0'
@@ -77,7 +77,7 @@ namespace impl
     //===================================================================================
     //  Ищем начало имени типа в __PRETTY_FUNC__
     template <typename T>
-    static constexpr const char* _pos_T_in_pattern()
+    constexpr const char* _pos_T_in_pattern()
     {
         return _advance_along_substr( _sign_T_PRETTY_FUNC<T>(), _sign_T_preambul );
     }

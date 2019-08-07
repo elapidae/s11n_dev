@@ -1,24 +1,57 @@
-#ifndef SIGNATURE_H
-#define SIGNATURE_H
+#pragma once
+
 
 #include "impl/tuple_helper.h"
 #include "impl/name_of_type.h"
 #include "impl/description.h"
 
+
+//=======================================================================================
+//      signature -- сигнатура типа, что-то вроде отпечатка пальца.
+//
+//  Сигнатурой считается имя типа + необязательное описание + его отображение на кортеж.
+//
+//  - имя типа -- см. name_of_type;
+//  - описание -- см. description;
+//  - отображение на кортеж -- см. tuple_helper;
+//
+//
+//  Сигнатура арифметических типов совпадает с их name_of_type.
+//
+//  Сигнатура кортежей составляется из фигурных скобок, в которых указываются типы:
+//      "{name_of_type1,name_of_type2,...,name_of_typeN}"
+//
+//
+//=======================================================================================
+namespace s11n {
+namespace impl
+{
+    //===================================================================================
+    template <typename T>
+    std::string signature();
+    //===================================================================================
+}}
+//=======================================================================================
+
+
+
+//=======================================================================================
+//      Implementation
+//=======================================================================================
 namespace s11n {
 namespace impl
 {
     //===================================================================================
     //
-    template <typename T> static typename
-    std::enable_if< is_tuple<T>(), std::string>::type signature();
+    template <typename T> typename
+    std::enable_if< is_tuple<T>(), std::string>::type _signature();
 
-    template <typename T> static typename
-    std::enable_if< has_serial_tuple<T>(), std::string>::type signature();
+    template <typename T> typename
+    std::enable_if< has_serial_tuple<T>(), std::string>::type _signature();
 
-    template <typename T> static typename
+    template <typename T> typename
     std::enable_if< !is_tuple<T>() &&
-                    !has_serial_tuple<T>(), std::string>::type signature();
+                    !has_serial_tuple<T>(), std::string>::type _signature();
     //===================================================================================
 
     template <typename T>
@@ -64,44 +97,51 @@ namespace impl
         return res;
     }
     //-----------------------------------------------------------------------------------
-    template <typename T> static typename
+    template <typename T> typename
     std::enable_if
     <
         !is_tuple<T>() && !has_serial_tuple<T>(),
         std::string
     >::type
-    signature()
+    _signature()
     {
         return name_of_type<T>().str() +
                description_in_squares_str<T>();
     }
     //-----------------------------------------------------------------------------------
-    template <typename T> static typename
+    template <typename T> typename
     std::enable_if
     <
         is_tuple<T>(),
         std::string
     >::type
-    signature()
+    _signature()
     {
         return tuple_signature<T>();
     }
     //-----------------------------------------------------------------------------------
-    template <typename T> static typename
+    template <typename T> typename
     std::enable_if
     <
         has_serial_tuple<T>(),
         std::string
     >::type
-    signature()
+    _signature()
     {
         return name_of_type<T>().str() +
                description_in_squares_str<T>() +
                tuple_signature< serial_tuple_type<T> >();
     }
     //===================================================================================
+
+
+    //===================================================================================
+    template <typename T>
+    std::string signature()
+    {
+        return _signature<T>();
+    }
+    //===================================================================================
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
-
-#endif // SIGNATURE_H

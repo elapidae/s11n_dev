@@ -2,7 +2,7 @@
 #define S11N_SERIAL_H
 
 #include <string>
-#include "../s11n/impl/str_view.h"
+#include "impl/str_view.h"
 //#include "../s11n/impl/name_of_type_from_pf.h"
 
 namespace s11n
@@ -21,5 +21,6 @@ struct Serial;
 //};
 
 } // namespace s11n
+
 
 #endif // S11N_SERIAL_H
