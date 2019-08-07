@@ -12,6 +12,7 @@ class Size
 {
 public:
     explicit Size( uint32_t val = 0 );
+    explicit Size( size_t val = 0 );
 
     operator uint32_t() const;
 
@@ -24,7 +25,7 @@ template<typename T> struct Serial;
 template<>
 struct Serial<Size>
 {
-    static impl::Serializer& serialize(impl::Serializer& ser, const Size& sz_)
+    static void serialize(impl::Serializer* ser, const Size& sz_)
     {
         uint32_t sz = sz_;
         while( sz )
@@ -35,12 +36,11 @@ struct Serial<Size>
             if (sz == 0)
                 b |= 0x80;
 
-            ser.put<uint8_t>( b );
+            ser->put<uint8_t>( b );
         }
-        return ser;
     }
 
-    static impl::Deserializer& deserialize(impl::Deserializer& des, Size& sz_)
+    static Size deserialize( impl::Deserializer* des )
     {
         uint32_t res        = 0;
         int      shift      = 0;
@@ -52,7 +52,7 @@ struct Serial<Size>
             if ( ++pos_watch > 5 )
                 throw std::runtime_error( "Size out" );
 
-            uint32_t cur = des.get<uint8_t>();
+            uint32_t cur = des->get<uint8_t>();
             stop = cur & 0x80;
             cur &= 0x7F;
             cur <<= shift;
@@ -61,9 +61,7 @@ struct Serial<Size>
         }
         while( !stop );
 
-        sz_ = Size(res);
-
-        return des;
+        return Size(res);
     }
 };
 

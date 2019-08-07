@@ -1,13 +1,14 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++17
 CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
     impl/description.cpp \
-    impl/s11n_type_traits.cpp \
+    #impl/s11n_type_traits.cpp \
     #impl/signature.cpp \
     impl/signature.cpp \
+    #impl/crc.cpp \
     impl/tuple_helper.cpp \
         main.cpp \
     s11n_serial.cpp \
@@ -19,9 +20,10 @@ SOURCES += \
 HEADERS += \
     impl/description.h \
     impl/name_of_type.h \
-    impl/s11n_type_traits.h \
+    #impl/s11n_type_traits.h \
     #impl/signature.h \
     impl/signature.h \
+    impl/crc.h \
     impl/tuple_helper.h \
     s11n_serial.h \
     impl/str_view.h \

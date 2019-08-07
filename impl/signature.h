@@ -1,8 +1,6 @@
 #ifndef SIGNATURE_H
 #define SIGNATURE_H
 
-#include "vlog.h"
-
 #include "impl/tuple_helper.h"
 #include "impl/name_of_type.h"
 #include "impl/description.h"

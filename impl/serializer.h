@@ -69,6 +69,11 @@ public:
         res.append( ch, sizeof(val) );
     }
 
+    void put( const std::string& val )
+    {
+        res += val;
+    }
+
     std::string res;
 };
 
@@ -84,6 +89,19 @@ public:
     {
         static_assert ( sizeof(bool) == 1, "strange bool size" );
         return _get<T>();
+    }
+
+    std::string get_str( uint32_t sz )
+    {
+        if ( _remained < sz )
+            throw std::out_of_range("Deserializer::get_str()");
+
+        auto res = std::string( _ptr, sz );
+
+        _remained -= sz;
+        _ptr += sz;
+
+        return res;
     }
 
 private:
