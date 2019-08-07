@@ -1,8 +1,7 @@
 #ifndef NAME_OF_TYPE_FROM_PF_H
 #define NAME_OF_TYPE_FROM_PF_H
 
-#include <cstddef>
-#include "../s11n/impl/str_view.h"
+#include "impl/str_view.h"
 
 //=======================================================================================
 namespace s11n {
@@ -27,7 +26,6 @@ namespace impl
 {
     //===================================================================================
     template <typename T> static constexpr const char* _pos_T_in_pattern();
-    static constexpr size_t _index_of( const char *src, char pattern );
 
     //===================================================================================
     //  Принцип извлечения имени типа:
@@ -41,7 +39,7 @@ namespace impl
         return
         {
             _pos_T_in_pattern<T>(),
-            _index_of( _pos_T_in_pattern<T>(), ']' )
+            index_of( _pos_T_in_pattern<T>(), ']' )
         };
     }
     //===================================================================================
@@ -68,7 +66,8 @@ namespace impl
     //  Возвращает указатель, следующий за паттерном.
     //  По идее, должен проверять правильность паттерна вначале. Пока не знаю как
     //  это реализовать в 11-м стандарте.
-    static constexpr const char* _advance_along_substr( const char *src, const char *pattern )
+    static constexpr const char* _advance_along_substr( const char* src,
+                                                        const char* pattern )
     {
         // cannot do: static_assert( *src == *pattern, "" );
         return *pattern == '\0'
@@ -83,22 +82,6 @@ namespace impl
         return _advance_along_substr( _sign_T_PRETTY_FUNC<T>(), _sign_T_preambul );
     }
     //
-    //===================================================================================
-    //  Индекс первого найденного символа в строке, в рекурсии.
-    //  См. _index_of()
-    static constexpr size_t _index_of_with_recurse( const char *src, char pattern, size_t accum)
-    {
-        //  cannot in c++11: static_assert ( *src != '\0', "" );
-        return *src == pattern
-                    ? accum
-                    : _index_of_with_recurse( src + 1, pattern, accum + 1 );
-    }
-    //===================================================================================
-    //  Индекс первого найденного символа в строке. Здесь вход в рекурсию.
-    static constexpr size_t _index_of( const char *src, char pattern )
-    {
-        return _index_of_with_recurse( src, pattern, 0 );
-    }
     //===================================================================================
 } // impl
 } // s11n

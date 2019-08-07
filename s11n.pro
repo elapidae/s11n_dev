@@ -4,13 +4,21 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+    impl/description.cpp \
+    impl/s11n_type_traits.cpp \
+    #impl/signature.cpp \
         main.cpp \
     s11n_serial.cpp \
     s11n_size.cpp \
     impl/serializer.cpp \
-    s11n_encoder.cpp
+    s11n_encoder.cpp \
+    impl/str_view.cpp
 
 HEADERS += \
+    impl/description.h \
+    impl/name_of_type.h \
+    impl/s11n_type_traits.h \
+    #impl/signature.h \
     s11n_serial.h \
     impl/str_view.h \
     impl/name_of_type_from_pf.h \

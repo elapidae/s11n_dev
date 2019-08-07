@@ -5,7 +5,7 @@ namespace impl {
 
 Deserializer::Deserializer( const std::string& src )
     : _src( src )
-    , _pos( _src.c_str() )
+    , _ptr( _src.c_str() )
     , _remained( _src.size() )
 {}
 

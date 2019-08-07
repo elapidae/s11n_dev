@@ -3,93 +3,233 @@
 #include "vlog.h"
 #include "verror.h"
 #include "vcat_containers.h"
-//#include "impl/name_of_type_from_pf.h"
 #include "impl/serializer.h"
 #include "s11n_serial.h"
 #include "s11n_size.h"
 #include "vstring.h"
+#include "impl/description.h"
+#include "impl/name_of_type.h"
 
-struct AAA { int i, j; };
+static void print_plain_name_of_type();
+
+
+
+using namespace s11n::impl;
+
+
+struct AAA {};
+
+struct BBB {};
+
+struct CCC {};
+
+namespace s11n
+{
+    template <>
+    struct Serial<BBB>
+    {
+        static constexpr auto name_of_type = "!Serial BBB!";
+    };
+}
+
+namespace s11n
+{
+    template <>
+    struct Serial<CCC>
+    {
+        static constexpr auto description = "CCC description!";
+    };
+}
+
+//===================================================================================
+//  is_tuple, tuple helpers
+template<typename T, typename = void>
+struct _has_tuple_size
+    : std::false_type
+{};
 
 template<typename T>
-class BBB : public AAA {};
+struct _has_tuple_size< T, std::void_t<decltype(std::tuple_size<T>::value)> >
+    : std::true_type
+{};
+
+template<typename T> static constexpr
+bool is_tuple() { return _has_tuple_size<T>::value; }
+
+template<typename T> static constexpr
+int tuple_size() { return std::tuple_size<T>::value; }
+
+template<typename T> static constexpr // Используется при итерациях с кортежами.
+int tuple_start_idx() { return std::tuple_size<T>::value == 0 ? -1 : 0; }
+
+template<int idx, typename T> static constexpr
+int tuple_next_idx() { return idx + 1 == tuple_size<T>() ? -1 : idx + 1; }
+
+template<typename T, int idx>
+using tuple_element = typename std::tuple_element<idx,T>::type;
 
 
 
-using namespace s11n;
-using namespace std;
+template <typename T> static constexpr bool has_serial_tuple();
 
-template<>
-struct s11n::Serial<AAA>
+template <typename T>
+static typename std::enable_if< is_tuple<T>(), std::string >::type signature();
+
+template <typename T> static typename
+std::enable_if< !is_tuple<T>() && !has_serial_tuple<T>(), std::string>::type signature();
+
+template <typename T> static typename
+std::enable_if< is_tuple<T>(), std::string>::type signature();
+
+template <typename T> static typename
+std::enable_if< has_serial_tuple<T>(), std::string>::type signature();
+
+
+
+//===============================================================================
+//  Итерируем до тех пор, пока не достигнем последнего элемента, когда достигнем,
+//  установим индекс в -1 и выйдем через специализированную структуру.
+template<int idx, typename atuple>
+struct _tuple_signature
 {
-    static std::tuple<int,int> as_tuple(const AAA& a)
-    { return std::make_tuple(a.i,a.j); }
+    static void make_signature( std::string* res )
+    {
+        using element = tuple_element<atuple,idx>;
+        *res += signature<element>();
+        res->push_back(',');
+        constexpr auto next_idx = tuple_next_idx<idx,atuple>();
+        _tuple_signature<next_idx,atuple>::make_signature( res );
+    }
 };
+//-------------------------------------------------------------------------------
+template<typename atuple>
+struct _tuple_signature<-1,atuple>
+{
+    static void make_signature( std::string* )
+    {} // do nothing.
+};
+//-------------------------------------------------------------------------------
+template<typename atuple>
+std::string tuple_signature()
+{
+    std::string res = "{";
+    static constexpr auto idx = tuple_start_idx<atuple>();
+    _tuple_signature<idx,atuple>::make_signature( &res );
+    if (idx == -1)
+        res.push_back('}');
+    else
+        res.back() = '}'; // replace last ',';
+    return res;
+}
 
+
+template <typename T> static typename
+std::enable_if
+<
+    !is_tuple<T>() && !has_serial_tuple<T>(),
+    std::string
+>::type
+signature()
+{
+    return name_of_type<T>().str() + description_in_squares_str<T>();
+}
+
+template <typename T> static typename
+std::enable_if
+<
+    is_tuple<T>(),
+    std::string
+>::type
+signature()
+{
+    return tuple_signature<T>();
+}
+
+template <typename T> static typename
+std::enable_if
+<
+    has_serial_tuple<T>(),
+    std::string
+>::type
+signature()
+{
+    return name_of_type<T>().str() +
+           description_in_squares_str<T>() +
+           signature<std::result_of<decltype(s11n::Serial<T>::as_tuple)>::type>();
+}
+
+
+template <typename T, typename = void>
+struct _has_serial_tuple
+    : std::false_type
+{};
+
+template <typename T>
+struct _has_serial_tuple
+<
+    T,
+    std::void_t< decltype(s11n::Serial<T>::as_tuple) >
+>
+    : std::true_type
+{};
+
+template <typename T>
+static constexpr bool has_serial_tuple()
+{
+    return _has_serial_tuple<T>::value;
+}
+
+
+using T1 = std::tuple<char,int,long>;
+using T2 = std::tuple<T1,double,AAA>;
+using T3 = std::tuple<T2,BBB,CCC>;
+using T4 = std::tuple<T1,T2,T3>;
 
 int main()
 {
-    char ch; (void)ch;
-                                            //   0       1       !2!
-    vdeb << is_same<char,int8_t>::value;    //  true    false   false
-    vdeb << is_same<char,uint8_t>::value;   //  false   true    false
+    auto t = std::tuple<char,int,long>();
+    vdeb << "t is tuple:" << is_tuple<decltype(t)>();
+    vdeb << "bool is tuple:" << is_tuple<bool>();
+    vdeb << signature<decltype(t)>();
+    return 0;
+    vdeb << "============ name of special types:";
+    vdeb << name_of_type<AAA>();
+    vdeb << name_of_type<BBB>();
 
-    //vdeb << s11n::impl::name_of_type_from_PF<BBB<int>>().str();
+    vdeb << "============ Descriptions in squares:";
+    vdeb << description_in_squares<int>();
+    vdeb << description_in_squares<AAA>();
+    vdeb << description_in_squares<BBB>();
+    vdeb << description_in_squares<CCC>();
 
-    vdeb << s11n::name_of_type<bool>().str();
-
-    s11n::impl::Serializer s;
-    s.put(true);
-    s.put(false);
-    s.put(42);
-    s.put(43.6);
-
-    s11n::impl::Deserializer d(s.res);
-    vdeb << d.get<bool>();
-    vdeb << d.get<bool>();
-    vdeb << d.get<int>();
-    vdeb << d.get<double>();
-
-    s.res.clear();
-    auto rr = Serial<Size>::serialize(s, Size(42)).res;
-    vdeb;
-
-//    s11n::impl::Deserializer d( "ololol" );
-//    vdeb << d.get<char>();
-//    vdeb << d.get<int16_t>();
-
-//    vdeb << s11n::name_of_type_from_PF<AAA>().str();
-//    vdeb << s11n::name_of_type_from_PF<BBB<int>>().str();
-
-//    auto n = 4500343325911564866ull;
-//    vdeb << (char*)&n; // endeed: two static_cast<>();
-
-
-
-//    auto n =
-//    VString s;
-//    s.append_LE(n);
-//    vdeb << s;
-
-//    vdeb << std::string( nT_pf.ptr, nT_pf.len );
-//    return 0;
-
-//    std::vector<int> v{5, 4, 3, 6, 5, 4, 8, -1, -2, -42, 42};
-//    bubble_sort( v.data(), v.size() );
-//    vdeb << v;
-//    return 0;
-////    vcv::GpuImage gimg;
-
-//    constexpr StrView TestCrc { "123456789", 9 };
-
-//    vdeb << (crc(TestCrc, 0xFFFFFFFF) ^ 0xFFFFFFFF );
-
-//    vdeb << sign_T_PRETTY_FUNC<int>();
-//    vdeb << prefix_sign_T_PRETTY_FUNC;
+    print_plain_name_of_type();
 
     return 0;
 }
 
+
+
+static void print_plain_name_of_type()
+{
+    using namespace s11n::impl;
+
+    vdeb << "============ names of plain types:";
+    vdeb << name_of_type<char>();
+    vdeb << name_of_type<bool>();
+    vdeb;
+    vdeb << name_of_type<int8_t>();
+    vdeb << name_of_type<int16_t>();
+    vdeb << name_of_type<int32_t>();
+    vdeb << name_of_type<int64_t>();
+    vdeb;
+    vdeb << name_of_type<uint8_t>();
+    vdeb << name_of_type<uint16_t>();
+    vdeb << name_of_type<uint32_t>();
+    vdeb << name_of_type<uint64_t>();
+    vdeb;
+    vdeb << name_of_type<float>();
+    vdeb << name_of_type<double>();
+}
 
 
 
