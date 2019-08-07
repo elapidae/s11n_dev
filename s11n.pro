@@ -7,6 +7,8 @@ SOURCES += \
     impl/description.cpp \
     impl/s11n_type_traits.cpp \
     #impl/signature.cpp \
+    impl/signature.cpp \
+    impl/tuple_helper.cpp \
         main.cpp \
     s11n_serial.cpp \
     s11n_size.cpp \
@@ -19,6 +21,8 @@ HEADERS += \
     impl/name_of_type.h \
     impl/s11n_type_traits.h \
     #impl/signature.h \
+    impl/signature.h \
+    impl/tuple_helper.h \
     s11n_serial.h \
     impl/str_view.h \
     impl/name_of_type_from_pf.h \

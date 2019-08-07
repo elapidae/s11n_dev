@@ -9,189 +9,76 @@
 #include "vstring.h"
 #include "impl/description.h"
 #include "impl/name_of_type.h"
+#include "impl/tuple_helper.h"
+#include "impl/signature.h"
+
+#include <map>
 
 static void print_plain_name_of_type();
 
-
+template <typename> class TD;
 
 using namespace s11n::impl;
 
 
 struct AAA {};
-
 struct BBB {};
-
 struct CCC {};
-
-namespace s11n
-{
-    template <>
-    struct Serial<BBB>
-    {
-        static constexpr auto name_of_type = "!Serial BBB!";
-    };
-}
-
-namespace s11n
-{
-    template <>
-    struct Serial<CCC>
-    {
-        static constexpr auto description = "CCC description!";
-    };
-}
-
-//===================================================================================
-//  is_tuple, tuple helpers
-template<typename T, typename = void>
-struct _has_tuple_size
-    : std::false_type
-{};
-
-template<typename T>
-struct _has_tuple_size< T, std::void_t<decltype(std::tuple_size<T>::value)> >
-    : std::true_type
-{};
-
-template<typename T> static constexpr
-bool is_tuple() { return _has_tuple_size<T>::value; }
-
-template<typename T> static constexpr
-int tuple_size() { return std::tuple_size<T>::value; }
-
-template<typename T> static constexpr // Используется при итерациях с кортежами.
-int tuple_start_idx() { return std::tuple_size<T>::value == 0 ? -1 : 0; }
-
-template<int idx, typename T> static constexpr
-int tuple_next_idx() { return idx + 1 == tuple_size<T>() ? -1 : idx + 1; }
-
-template<typename T, int idx>
-using tuple_element = typename std::tuple_element<idx,T>::type;
-
-
-
-template <typename T> static constexpr bool has_serial_tuple();
-
-template <typename T>
-static typename std::enable_if< is_tuple<T>(), std::string >::type signature();
-
-template <typename T> static typename
-std::enable_if< !is_tuple<T>() && !has_serial_tuple<T>(), std::string>::type signature();
-
-template <typename T> static typename
-std::enable_if< is_tuple<T>(), std::string>::type signature();
-
-template <typename T> static typename
-std::enable_if< has_serial_tuple<T>(), std::string>::type signature();
-
-
-
-//===============================================================================
-//  Итерируем до тех пор, пока не достигнем последнего элемента, когда достигнем,
-//  установим индекс в -1 и выйдем через специализированную структуру.
-template<int idx, typename atuple>
-struct _tuple_signature
-{
-    static void make_signature( std::string* res )
-    {
-        using element = tuple_element<atuple,idx>;
-        *res += signature<element>();
-        res->push_back(',');
-        constexpr auto next_idx = tuple_next_idx<idx,atuple>();
-        _tuple_signature<next_idx,atuple>::make_signature( res );
-    }
-};
-//-------------------------------------------------------------------------------
-template<typename atuple>
-struct _tuple_signature<-1,atuple>
-{
-    static void make_signature( std::string* )
-    {} // do nothing.
-};
-//-------------------------------------------------------------------------------
-template<typename atuple>
-std::string tuple_signature()
-{
-    std::string res = "{";
-    static constexpr auto idx = tuple_start_idx<atuple>();
-    _tuple_signature<idx,atuple>::make_signature( &res );
-    if (idx == -1)
-        res.push_back('}');
-    else
-        res.back() = '}'; // replace last ',';
-    return res;
-}
-
-
-template <typename T> static typename
-std::enable_if
-<
-    !is_tuple<T>() && !has_serial_tuple<T>(),
-    std::string
->::type
-signature()
-{
-    return name_of_type<T>().str() + description_in_squares_str<T>();
-}
-
-template <typename T> static typename
-std::enable_if
-<
-    is_tuple<T>(),
-    std::string
->::type
-signature()
-{
-    return tuple_signature<T>();
-}
-
-template <typename T> static typename
-std::enable_if
-<
-    has_serial_tuple<T>(),
-    std::string
->::type
-signature()
-{
-    return name_of_type<T>().str() +
-           description_in_squares_str<T>() +
-           signature<std::result_of<decltype(s11n::Serial<T>::as_tuple)>::type>();
-}
-
-
-template <typename T, typename = void>
-struct _has_serial_tuple
-    : std::false_type
-{};
-
-template <typename T>
-struct _has_serial_tuple
-<
-    T,
-    std::void_t< decltype(s11n::Serial<T>::as_tuple) >
->
-    : std::true_type
-{};
-
-template <typename T>
-static constexpr bool has_serial_tuple()
-{
-    return _has_serial_tuple<T>::value;
-}
-
 
 using T1 = std::tuple<char,int,long>;
 using T2 = std::tuple<T1,double,AAA>;
 using T3 = std::tuple<T2,BBB,CCC>;
 using T4 = std::tuple<T1,T2,T3>;
 
+
+struct DDD {};
+
+namespace s11n
+{
+    template <> struct Serial<DDD>
+    {
+        static std::tuple<float,T4> to_tuple( const DDD & )
+        {
+            return std::tuple<float,T4>();
+        }
+
+    };
+}
+
+namespace s11n
+{
+    template <> struct Serial<BBB>
+    {
+        static constexpr auto name_of_type = "BBB with name of type";
+    };
+}
+
+namespace s11n
+{
+    template <> struct Serial<CCC>
+    {
+        static constexpr auto description = "CCC with description, ver. 1";
+    };
+}
+
+
+
 int main()
 {
+    vdeb << signature<T4>();
+    vdeb << signature<DDD>();
+
+    vdeb << "============ has serial tuple:";
+    vdeb << has_serial_tuple<int>();
+    vdeb << has_serial_tuple<AAA>();
+    vdeb << has_serial_tuple<BBB>();
+    vdeb << has_serial_tuple<CCC>();
+
+    vdeb << "============ is_tuple:";
     auto t = std::tuple<char,int,long>();
     vdeb << "t is tuple:" << is_tuple<decltype(t)>();
     vdeb << "bool is tuple:" << is_tuple<bool>();
-    vdeb << signature<decltype(t)>();
-    return 0;
+
     vdeb << "============ name of special types:";
     vdeb << name_of_type<AAA>();
     vdeb << name_of_type<BBB>();
