@@ -1,7 +1,9 @@
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
 
-#include <endian.h>
+
+#include "impl/endian.h"
+
 #include <type_traits>
 #include <stdexcept>
 
@@ -26,33 +28,6 @@ namespace impl {
 //=======================================================================================
 
 
-//=======================================================================================
-//  Функция выворачивает число наизнанку, если архитектура big_endian.
-template <typename T>
-static typename std::enable_if< std::is_arithmetic<T>::value,T>::type
-to_little_endian( T val )
-{
-    static_assert( sizeof(T) <= 8 && (sizeof(T) == 1 || sizeof(T) % 2 == 0),
-                   "Strange size of T, must be 1 or 2 or 4 or 8." );
-
-  #if BYTE_ORDER == LITTLE_ENDIAN
-    // nothing to do...
-  #elif BYTE_ORDER == BIG_ENDIAN
-    auto *ch = static_cast<char*>( static_cast<void*>(&val) );
-    constexpr auto tsize = sizeof(T);
-
-    switch( tsize )
-    {
-    case 8: std::swap( ch[3], ch[tsize-4] );
-            std::swap( ch[2], ch[tsize-3] );
-    case 4: std::swap( ch[1], ch[tsize-2] );
-    case 2: std::swap( ch[0], ch[tsize-1] );
-    }
-  #else
-    #error "Unknown byte order";
-  #endif
-    return val;
-}
 
 
 
@@ -64,7 +39,7 @@ public:
     typename std::enable_if< std::is_arithmetic<T>::value, void>::type
     put(T val)
     {
-        val = to_little_endian(val);
+        val = little_endian(val);
         auto *ch = static_cast<char*>( static_cast<void*>(&val) );
         res.append( ch, sizeof(val) );
     }
@@ -122,7 +97,7 @@ private:
         _remained -= sizeof(T);
         _ptr += sizeof(T);
 
-        return to_little_endian( res );
+        return little_endian( res );
     }
 
 

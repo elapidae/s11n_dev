@@ -3,7 +3,8 @@
 
 #include <cstddef>
 #include "impl/str_view.h"
-#include "impl/serializer.h"
+#include "s11n_writer.h"
+
 
 
 namespace s11n {
@@ -25,10 +26,10 @@ template<typename T> struct Serial;
 template<>
 struct Serial<Size>
 {
-    static void serialize(impl::Serializer* ser, const Size& sz_)
+    static void write( const Size& sz_, Writer* w )
     {
         uint32_t sz = sz_;
-        while( sz )
+        do
         {
             auto b = uint8_t(sz & 0x7F);
             sz >>= 7;
@@ -36,32 +37,33 @@ struct Serial<Size>
             if (sz == 0)
                 b |= 0x80;
 
-            ser->put<uint8_t>( b );
+            w->write_plain<uint8_t>( b );
         }
+        while( sz );
     }
 
-    static Size deserialize( impl::Deserializer* des )
+    static Size read(  )
     {
-        uint32_t res        = 0;
-        int      shift      = 0;
-        bool     stop       = false;
-        int      pos_watch  = 0;
+//        uint32_t res        = 0;
+//        int      shift      = 0;
+//        bool     stop       = false;
+//        int      pos_watch  = 0;
 
-        do
-        {
-            if ( ++pos_watch > 5 )
-                throw std::runtime_error( "Size out" );
+//        do
+//        {
+//            if ( ++pos_watch > 5 )
+//                throw std::runtime_error( "Size out" );
 
-            uint32_t cur = des->get<uint8_t>();
-            stop = cur & 0x80;
-            cur &= 0x7F;
-            cur <<= shift;
-            shift += 7;
-            res |= cur;
-        }
-        while( !stop );
+//            uint32_t cur = des->get<uint8_t>();
+//            stop = cur & 0x80;
+//            cur &= 0x7F;
+//            cur <<= shift;
+//            shift += 7;
+//            res |= cur;
+//        }
+//        while( !stop );
 
-        return Size(res);
+//        return Size(res);
     }
 };
 

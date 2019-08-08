@@ -3,7 +3,7 @@
 
 #include <tuple>
 #include <type_traits>
-
+#include "impl/std_void_t.h"
 
 
 //=======================================================================================
@@ -62,14 +62,6 @@ namespace impl
 //=======================================================================================
 //      Implementation
 //=======================================================================================
-#ifndef void_t
-    namespace std
-    {
-        template< class... >
-        using void_t = void;
-    }
-#endif
-
 namespace s11n { template <typename> struct Serial; }
 
 

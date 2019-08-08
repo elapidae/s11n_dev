@@ -20,6 +20,8 @@
 
 #include <assert.h>
 
+#include "s11n_encoder.h"
+
 static void print_plain_name_of_type();
 
 template <typename> class TD;
@@ -32,15 +34,33 @@ struct BBB {};
 struct CCC {};
 
 using T1 = std::tuple<char,int,long>;
-using T2 = std::tuple<T1,double,AAA>;
-using T3 = std::tuple<T2,BBB,CCC>;
+using T2 = std::tuple<T1,double>;
+using T3 = std::tuple<T1,T2,BBB,CCC>;
 using T4 = std::tuple<T1,T2,T3>;
+using T5 = std::tuple<T1,T2,T3,T4>;
 
 
 struct DDD {};
 
 namespace s11n
 {
+    template <> struct Serial<AAA>
+    {
+        static std::tuple<> to_tuple(AAA) { return {}; }
+    };
+
+    template <> struct Serial<BBB>
+    {
+        static std::tuple<> to_tuple(BBB) { return {}; }
+        static constexpr auto name_of_type = "BBB with name of type";
+    };
+
+    template <> struct Serial<CCC>
+    {
+        static std::tuple<> to_tuple(CCC) { return {}; }
+        static constexpr auto description = "CCC with description, ver. 1";
+    };
+
     template <> struct Serial<DDD>
     {
         static std::tuple<float,T4> to_tuple( const DDD & )
@@ -51,59 +71,44 @@ namespace s11n
     };
 }
 
-namespace s11n
-{
-    template <> struct Serial<BBB>
-    {
-        static constexpr auto name_of_type = "BBB with name of type";
-    };
-}
-
-namespace s11n
-{
-    template <> struct Serial<CCC>
-    {
-        static constexpr auto description = "CCC with description, ver. 1";
-    };
-}
 
 
 namespace s11n
 {
-    template <typename T>
-    struct Serial< std::vector<T> >
-    {
-        static void serialize( impl::Serializer* ser, const std::vector<T>& vec )
-        {
-            Serial<Size>::serialize( ser, Size(vec.size()) );
-            for (auto && val: vec) ;
-                //encode vector!!!
-            //ser->put( str );
-        }
+//    template <typename T>
+//    struct Serial< std::vector<T> >
+//    {
+//        static void serialize( impl::Serializer* ser, const std::vector<T>& vec )
+//        {
+//            Serial<Size>::serialize( ser, Size(vec.size()) );
+//            for (auto && val: vec) ;
+//                //encode vector!!!
+//            //ser->put( str );
+//        }
 
-        static std::string deserialize(impl::Deserializer* des)
-        {
-            auto sz = Serial<Size>::deserialize( des );
-            return des->get_str( sz );
-        }
-    };
+//        static std::string deserialize(impl::Deserializer* des)
+//        {
+//            auto sz = Serial<Size>::deserialize( des );
+//            return des->get_str( sz );
+//        }
+//    };
 
     template<>
     struct Serial<std::string>
     {
 //        static constexpr auto name_of_type = "std::string";
 
-        static void serialize( impl::Serializer* ser, const std::string& str )
-        {
-            Serial<Size>::serialize( ser, Size(str.size()) );
-            ser->put( str );
-        }
+//        static void serialize( impl::Serializer* ser, const std::string& str )
+//        {
+//            Serial<Size>::serialize( ser, Size(str.size()) );
+//            ser->put( str );
+//        }
 
-        static std::string deserialize(impl::Deserializer* des)
-        {
-            auto sz = Serial<Size>::deserialize( des );
-            return des->get_str( sz );
-        }
+//        static std::string deserialize(impl::Deserializer* des)
+//        {
+//            auto sz = Serial<Size>::deserialize( des );
+//            return des->get_str( sz );
+//        }
     };
 }
 
@@ -169,6 +174,27 @@ static constexpr bool has_mapped_type()
 
 int main()
 {
+    //vdeb << has_serial_tuple<BBB>();
+    //return 0;
+
+    vdeb << s11n::Encoder::encode(420).size();
+    vdeb << s11n::Encoder::encode( std::tuple<>{} ).size();
+    vdeb << s11n::Encoder::encode( std::tuple<int>{'Q'} );
+
+    vdeb << s11n::Encoder::encode(T1()).size();
+    vdeb << s11n::Encoder::encode(T2()).size();
+    vdeb << s11n::Encoder::encode(T3()).size();
+    vdeb << s11n::Encoder::encode(T4()).size();
+    vdeb << s11n::Encoder::encode(T5()).size();
+
+    vdeb << s11n::Encoder::encode(std::string(40,'c'));
+    vdeb << s11n::Encoder::encode(std::vector<int16_t>(40,0x4142));
+
+    vdeb << s11n::Encoder::encode(std::map<int16_t, long>()).size();
+    vdeb << name_of_type<std::map<int16_t,long>>();
+
+    return 0;
+
     print_T_crc<std::string>();
 
     print_T_crc<CRC_Check>();
