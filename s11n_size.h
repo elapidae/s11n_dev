@@ -4,7 +4,8 @@
 #include <cstddef>
 #include "impl/str_view.h"
 #include "s11n_writer.h"
-
+#include <stdexcept>
+#include "s11n_reader.h"
 
 
 namespace s11n {
@@ -42,28 +43,28 @@ struct Serial<Size>
         while( sz );
     }
 
-    static Size read(  )
+    static Size read( Reader* reader )
     {
-//        uint32_t res        = 0;
-//        int      shift      = 0;
-//        bool     stop       = false;
-//        int      pos_watch  = 0;
+        uint32_t res        = 0;
+        int      shift      = 0;
+        bool     stop       = false;
+        int      pos_watch  = 0;
 
-//        do
-//        {
-//            if ( ++pos_watch > 5 )
-//                throw std::runtime_error( "Size out" );
+        do
+        {
+            if ( ++pos_watch > 5 )
+                throw std::runtime_error( "Size out" );
 
-//            uint32_t cur = des->get<uint8_t>();
-//            stop = cur & 0x80;
-//            cur &= 0x7F;
-//            cur <<= shift;
-//            shift += 7;
-//            res |= cur;
-//        }
-//        while( !stop );
+            uint32_t cur = reader->read_plain<uint8_t>();
+            stop = cur & 0x80;
+            cur &= 0x7F;
+            cur <<= shift;
+            shift += 7;
+            res |= cur;
+        }
+        while( !stop );
 
-//        return Size(res);
+        return Size( res );
     }
 };
 

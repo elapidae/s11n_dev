@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <utility>  // for std::forward
 
 namespace s11n {
 namespace impl
@@ -32,7 +33,11 @@ namespace impl
         return _is_container<C>::value;
     }
 
-
+    template<typename Cont, typename Value>
+    void container_append( Cont* c, Value && val )
+    {
+        c->push_back( std::forward<Value>(val) );
+    }
 
 } // namespace impl
 } // namespace s11n

@@ -6,6 +6,8 @@ CONFIG -= qt
 SOURCES += \
     impl/zz_std_void_t.cpp \
         main.cpp \
+    s11n_decoder.cpp \
+    s11n_reader.cpp \
     s11n_serial.cpp \
     s11n_size.cpp \
     impl/serializer.cpp \
@@ -24,7 +26,10 @@ HEADERS += \
     impl/crc.h \
     impl/std_void_t.h \
     impl/tuple_helper.h \
+    impl/type_spec.h \
     impl/writer.h \
+    s11n_decoder.h \
+    s11n_reader.h \
     s11n_serial.h \
     impl/str_view.h \
     impl/name_of_type_from_pf.h \

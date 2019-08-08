@@ -9,7 +9,7 @@
 #include "impl/tuple_helper.h"
 #include "impl/container_helper.h"
 #include "impl/name_of_type.h"
-
+#include "impl/type_spec.h"
 
 
 namespace s11n
@@ -31,26 +31,8 @@ namespace s11n
 
 
     private:
-        enum class _type_spec { as_plain,
-                                as_own_write,
-                                as_serial_tuple,
-                                as_container,
-                                as_tuple,
-                                error
-                              };
 
-        template<typename T> constexpr static
-        _type_spec _get_spec()
-        {
-            return std::is_arithmetic<T>::value         ? _type_spec::as_plain
-                          : impl::has_serial_write<T>() ? _type_spec::as_own_write
-                          : impl::has_serial_tuple<T>() ? _type_spec::as_serial_tuple
-                          : impl::is_container<T>()     ? _type_spec::as_container
-                          : impl::is_tuple<T>()         ? _type_spec::as_tuple
-                                                        : _type_spec::error;
-        }
-
-        template<typename T, _type_spec>
+        template<typename T, impl::type_spec>
         struct _write_splitter;
 
         template<int idx, typename Tuple>
@@ -69,13 +51,13 @@ namespace s11n
     template<typename T>
     void Encoder::encode( const T& val, Writer* writer )
     {
-        _write_splitter<T,_get_spec<T>()>::write( val, writer );
+        _write_splitter<T,impl::spec_of<T>()>::write( val, writer );
     }
 
 
 
     template<typename T>
-    struct Encoder::_write_splitter<T, Encoder::_type_spec::as_plain>
+    struct Encoder::_write_splitter<T, impl::type_spec::as_plain>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -86,7 +68,7 @@ namespace s11n
 
 
     template<typename T>
-    struct Encoder::_write_splitter<T, Encoder::_type_spec::as_own_write>
+    struct Encoder::_write_splitter<T, impl::type_spec::as_own_read_write>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -97,7 +79,7 @@ namespace s11n
 
 
     template<typename T>
-    struct Encoder::_write_splitter<T, Encoder::_type_spec::as_serial_tuple>
+    struct Encoder::_write_splitter<T, impl::type_spec::as_serial_tuple>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -109,7 +91,7 @@ namespace s11n
 
 
     template<typename T>
-    struct Encoder::_write_splitter<T, Encoder::_type_spec::as_container>
+    struct Encoder::_write_splitter<T, impl::type_spec::as_container>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -124,7 +106,7 @@ namespace s11n
 
 
     template<typename T>
-    struct Encoder::_write_splitter<T, Encoder::_type_spec::as_tuple>
+    struct Encoder::_write_splitter<T, impl::type_spec::as_tuple>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -134,7 +116,7 @@ namespace s11n
 
 
     template<typename T>
-    struct Encoder::_write_splitter<T, Encoder::_type_spec::error>
+    struct Encoder::_write_splitter<T, impl::type_spec::error>
     {
         //constexpr
         static int write( const T&, Writer* )

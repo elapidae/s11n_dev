@@ -8,7 +8,6 @@
 
 namespace s11n
 {
-
     class Writer
     {
     public:
@@ -47,26 +46,6 @@ namespace s11n {
 namespace impl
 {
 
-    template<typename SerT, typename = void>
-    struct _has_serial_write : public std::false_type {};
-
-    template<typename SerT>
-    struct _has_serial_write
-        <
-            SerT,
-            std::void_t
-            <   // фейкрвый вызов для определения наличия write с соотв. сигнатурой.
-                decltype( s11n::Serial<SerT>::write(std::declval<SerT>(),nullptr) )
-            >
-        >
-        : public std::true_type
-    {};
-
-    template<typename SerT> constexpr
-    bool has_serial_write()
-    {
-        return _has_serial_write<SerT>::value;
-    }
 
 } // impl namespace
 } // s11n namespace
