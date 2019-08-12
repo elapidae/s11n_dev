@@ -3,7 +3,6 @@
 #include "vlog.h"
 #include "verror.h"
 #include "vcat_containers.h"
-#include "impl/serializer.h"
 #include "s11n_serial.h"
 #include "s11n_size.h"
 #include "vstring.h"
@@ -165,26 +164,34 @@ struct _has_mapped_type<T, std::void_t<typename T::mapped_type> >
 {};
 
 template <typename T>
-static constexpr bool has_mapped_type()
+constexpr bool has_mapped_type()
 {
-    return _has_value_type<T>::value;
+    return _has_mapped_type<T>::value;
 }
 
-template <typename T>
-struct S2;
-
-template <typename T>
-struct S2<std::vector<T>>
-{
-    //static constexpr auto name_of_type = std::string("std::vector<")">";
-};
 
 
+
+using namespace std;
+
+template<class> class TD;
 
 int main()
 {
-    //vdeb << has_serial_tuple<BBB>();
-    //return 0;
+    vdeb << s11n::impl::name_of_type<std::vector<int>>();
+    return 0;
+    vector<int> vi;
+
+    vdeb << _has_mapped_type< int >::value;
+    vdeb << _has_mapped_type< decltype(vi) >::value;
+    vdeb << _has_mapped_type< set<char> >::value;
+    vdeb << _has_mapped_type< map<int,int> >::value;
+
+    vdeb << has_mapped_type<int>();
+    vdeb << has_mapped_type< decltype(vi)>();
+    vdeb << has_mapped_type< set<char>>();
+    vdeb << has_mapped_type< map<int,int>>();
+    return 0;
 
     vdeb << s11n::Encoder::encode(420).size();
     vdeb << s11n::Encoder::encode( std::tuple<>{} ).size();
@@ -204,10 +211,10 @@ int main()
 
     vdeb << s11n::Encoder::encode( std::pair<const int,int>(0x31323335,0x36373839) );
 
-    std::vector<int> vi{1,2,3,4,5};
-    auto dvi = s11n::Encoder::encode( vi );
-    auto vi2 = s11n::AbstractDecoder::decode<decltype(vi)>( dvi );
-    assert( vi == vi2);
+    std::vector<int> vi1{1,2,3,4,5};
+    auto dvi = s11n::Encoder::encode( vi1 );
+    auto vi2 = s11n::AbstractDecoder::decode<decltype(vi1)>( dvi );
+    assert( vi1 == vi2);
 
     T1 t1{1,2,3};
     auto buf = s11n::Encoder::encode(t1);

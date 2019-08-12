@@ -4,13 +4,11 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-    impl/zz_std_void_t.cpp \
         main.cpp \
     s11n_decoder.cpp \
     s11n_reader.cpp \
     s11n_serial.cpp \
     s11n_size.cpp \
-    impl/serializer.cpp \
     s11n_encoder.cpp \
     impl/str_view.cpp \
     s11n_writer.cpp
@@ -34,7 +32,6 @@ HEADERS += \
     impl/str_view.h \
     impl/name_of_type_from_pf.h \
     s11n_size.h \
-    impl/serializer.h \
     s11n_encoder.h \
     s11n_writer.h
 
