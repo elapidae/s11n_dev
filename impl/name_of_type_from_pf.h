@@ -8,7 +8,9 @@ namespace s11n {
 namespace impl
 {
     //===================================================================================
-    template <typename T> constexpr
+    //  terminal_ch добавлен, чтобы в дальнейшем подцеплять имена контейнеров до их
+    //  аргументов (до '<').
+    template <typename T, char terminal_ch = ']'> constexpr
     str_view name_of_type_from_PF();
     //===================================================================================
 } // namespace impl
@@ -33,13 +35,13 @@ namespace impl
     //      __PRETTY_FUNCTION__, в ней, так или иначе, хранится имя типа.
     //      Дальнейшая задача -- выковырять это имя в compile-time.
     //
-    template <typename T> constexpr
+    template <typename T, char terminal_ch> constexpr
     str_view name_of_type_from_PF()
     {
         return
         {
             _pos_T_in_pattern<T>(),
-            index_of( _pos_T_in_pattern<T>(), ']' )
+            index_of( _pos_T_in_pattern<T>(), terminal_ch )
         };
     }
     //===================================================================================
