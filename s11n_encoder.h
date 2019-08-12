@@ -12,16 +12,13 @@
 #include "impl/type_spec.h"
 
 
+//=======================================================================================
 namespace s11n
 {
+    //===================================================================================
     class Encoder
     {
     public:
-//        template<typename T> static typename std::enable_if< impl::has_serial_tuple<T>(),
-//        void>::type encode( const T& val, Writer* writer );
-
-//        template<typename T> static typename std::enable_if< !is_serializable<T>(),
-//        void>::type encode( const T& val, WriteBuffer* buffer );
 
         template<typename T>
         static void encode( const T& val, Writer* writer );
@@ -37,9 +34,13 @@ namespace s11n
 
         template<int idx, typename Tuple>
         struct _tuple_writer;
-    };
+    }; // Encoder
+    //===================================================================================
 
 
+    //===================================================================================
+    //      Implementation
+    //===================================================================================
     template<typename T>
     std::string Encoder::encode( const T& val )
     {
@@ -47,15 +48,16 @@ namespace s11n
         encode( val, &w );
         return w.result();
     }
-
+    //===================================================================================
     template<typename T>
     void Encoder::encode( const T& val, Writer* writer )
     {
         _write_splitter<T,impl::spec_of<T>()>::write( val, writer );
     }
+    //===================================================================================
 
 
-
+    //===================================================================================
     template<typename T>
     struct Encoder::_write_splitter<T, impl::type_spec::as_plain>
     {
@@ -64,9 +66,7 @@ namespace s11n
             writer->write_plain( val );
         }
     };
-
-
-
+    //===================================================================================
     template<typename T>
     struct Encoder::_write_splitter<T, impl::type_spec::as_own_read_write>
     {
@@ -75,9 +75,7 @@ namespace s11n
             s11n::Serial<T>::write( val, writer );
         }
     };
-
-
-
+    //===================================================================================
     template<typename T>
     struct Encoder::_write_splitter<T, impl::type_spec::as_serial_tuple>
     {
@@ -86,10 +84,7 @@ namespace s11n
             Encoder::encode( s11n::Serial<T>::to_tuple(val), writer );
         }
     };
-
-
-
-
+    //===================================================================================
     template<typename T>
     struct Encoder::_write_splitter<T, impl::type_spec::as_container>
     {
@@ -102,9 +97,7 @@ namespace s11n
                 Encoder::encode( elem, writer );
         }
     };
-
-
-
+    //===================================================================================
     template<typename T>
     struct Encoder::_write_splitter<T, impl::type_spec::as_tuple>
     {
@@ -113,8 +106,7 @@ namespace s11n
             _tuple_writer<impl::tuple_start_idx<T>(),T>::write( val, writer );
         }
     };
-
-
+    //===================================================================================
     template<typename T>
     struct Encoder::_write_splitter<T, impl::type_spec::error>
     {
@@ -128,6 +120,7 @@ namespace s11n
             return 0;
         }
     };
+    //===================================================================================
 
 
     //===================================================================================
@@ -154,8 +147,8 @@ namespace s11n
         {} // do nothing
     };
     //===================================================================================
-
-
 } // namespace s11n
+//=======================================================================================
+
 
 #endif // S11N_ENCODER_H

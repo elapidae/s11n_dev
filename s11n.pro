@@ -22,11 +22,14 @@ HEADERS += \
     #impl/signature.h \
     impl/signature.h \
     impl/crc.h \
+    impl/std_string.h \
     impl/std_void_t.h \
     impl/tuple_helper.h \
     impl/type_spec.h \
     impl/writer.h \
+    s11n.h \
     s11n_decoder.h \
+    s11n_name_of_type.h \
     s11n_reader.h \
     s11n_serial.h \
     impl/str_view.h \

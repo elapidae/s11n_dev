@@ -92,24 +92,6 @@ namespace s11n
 //            return des->get_str( sz );
 //        }
 //    };
-
-    template<>
-    struct Serial<std::string>
-    {
-//        static constexpr auto name_of_type = "std::string";
-
-//        static void serialize( impl::Serializer* ser, const std::string& str )
-//        {
-//            Serial<Size>::serialize( ser, Size(str.size()) );
-//            ser->put( str );
-//        }
-
-//        static std::string deserialize(impl::Deserializer* des)
-//        {
-//            auto sz = Serial<Size>::deserialize( des );
-//            return des->get_str( sz );
-//        }
-    };
 }
 
 
