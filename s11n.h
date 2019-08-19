@@ -6,4 +6,9 @@
 #include "impl/std_string.h"
 
 
+namespace s11n
+{
+} // namespace s11n
+
+
 #endif // S11N_H

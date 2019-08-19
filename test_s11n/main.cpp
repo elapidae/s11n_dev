@@ -21,10 +21,11 @@
 
 #include "s11n.h"
 
-#include "test_s11n/test_name_of_type.cpp"
 
+// For pretty printing.
 #include <iostream>
 #define vdeb std::cout << __FILE__ << ":" << __LINE__
+
 
 using namespace std;
 using namespace s11n;
@@ -39,6 +40,8 @@ class Test_s11n: public testing::Test {};
 //=======================================================================================
 
 
+//=======================================================================================
+//      NAME OF TYPE
 //=======================================================================================
 TEST_F( Test_s11n, ariphmetic_name_of_type )
 {
@@ -78,7 +81,7 @@ TEST_F( Test_s11n, string_name_of_type )
     //  std::__cxx11::basic_string<char>
 
     EXPECT_EQ( s11n::name_of_type<std::string>(), "std::string" );
-    EXPECT_NE( s11n::name_of_type<OwnType>(), "std::__cxx11::basic_string<char>" );
+    EXPECT_NE( s11n::name_of_type<std::string>(), "std::__cxx11::basic_string<char>" );
 }
 //=======================================================================================
 
@@ -99,4 +102,6 @@ TEST_F( Test_s11n, Redefined_name_of_type_name_of_type )
     EXPECT_EQ( s11n::name_of_type<Redefined_name_of_type>(),
                "My redefined name of type" );
 }
+//=======================================================================================
+//      NAME OF TYPE
 //=======================================================================================

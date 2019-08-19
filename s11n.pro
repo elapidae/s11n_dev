@@ -18,8 +18,6 @@ HEADERS += \
     impl/description.h \
     impl/endian.h \
     impl/name_of_type.h \
-    #impl/s11n_type_traits.h \
-    #impl/signature.h \
     impl/signature.h \
     impl/crc.h \
     impl/std_string.h \
