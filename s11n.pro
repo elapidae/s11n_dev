@@ -6,7 +6,6 @@ CONFIG -= qt
 SOURCES += \
     impl/crc.cpp \
         main.cpp \
-    only_crc.cpp \
     s11n_decoder.cpp \
     s11n_reader.cpp \
     s11n_serial.cpp \
@@ -17,9 +16,7 @@ SOURCES += \
 
 HEADERS += \
     impl/container_helper.h \
-    impl/description.h \
     impl/endian.h \
-    impl/name_of_type.h \
     impl/signature.h \
     impl/crc.h \
     impl/std_string.h \
@@ -27,10 +24,8 @@ HEADERS += \
     impl/tuple_helper.h \
     impl/type_spec.h \
     impl/writer.h \
-    only_crc.h \
     s11n.h \
     s11n_decoder.h \
-    s11n_name_of_type.h \
     s11n_reader.h \
     s11n_serial.h \
     impl/str_view.h \

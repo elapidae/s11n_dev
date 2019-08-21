@@ -1,5 +1,4 @@
-#ifndef STR_VIEW_H
-#define STR_VIEW_H
+#pragma once
 
 #include <string>
 
@@ -38,20 +37,17 @@ namespace impl
     }
     //===================================================================================
     //  Индекс первого найденного символа в строке. Здесь вход в рекурсию.
-    static constexpr size_t index_of( const char *src, char pattern )
+    static constexpr size_t str_index_of( const char *src, char pattern )
     {
         return _index_of_with_recurse( src, pattern, 0 );
     }
     //===================================================================================
     //  length -- for comfort.
-    static constexpr size_t length( const char *src )
+    static constexpr size_t str_length( const char *src )
     {
-        return index_of( src, '\0' );
+        return str_index_of( src, '\0' );
     }
     //===================================================================================
-
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
-
-#endif // STR_VIEW_H

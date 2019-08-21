@@ -8,7 +8,7 @@
 #include "s11n_writer.h"
 #include "impl/tuple_helper.h"
 #include "impl/container_helper.h"
-#include "impl/name_of_type.h"
+#include "impl/signature.h"
 #include "impl/type_spec.h"
 
 
@@ -52,7 +52,7 @@ namespace s11n
     template<typename T>
     void Encoder::encode( const T& val, Writer* writer )
     {
-        _write_splitter<T,impl::spec_of<T>()>::write( val, writer );
+        _write_splitter<T,impl::type_spec_of<T>()>::write( val, writer );
     }
     //===================================================================================
 
@@ -116,7 +116,7 @@ namespace s11n
             //static_assert (false, "Cannot define specification type of type" );
             throw std::logic_error(
                         std::string("Cannot define specification of type '") +
-                        impl::name_of_type<T>().str() + "'" );
+                        impl::signature<T>() + "'" );
             return 0;
         }
     };

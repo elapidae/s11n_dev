@@ -124,6 +124,10 @@ namespace impl
     template <typename T>
     constexpr bool has_serial_tuple()
     {
+        static_assert (  !_has_serial_tuple<T>::value ||
+                        ( _has_serial_tuple<T>::value && is_tuple<T>() ),
+                         "Serial<T>::to_tuple() must return std::tuple only." );
+
         return _has_serial_tuple<T>::value;
     }
     //===================================================================================

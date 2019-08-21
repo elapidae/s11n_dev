@@ -83,7 +83,7 @@ namespace s11n
     template<typename T>
     T AbstractDecoder::decode( Reader* reader )
     {
-        return _read_joiner<T, impl::spec_of<T>()>::read( reader );
+        return _read_joiner<T, impl::type_spec_of<T>()>::read( reader );
     }
     //-----------------------------------------------------------------------------------
     template<typename T>
