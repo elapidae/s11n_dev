@@ -1,32 +1,24 @@
 #include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <assert.h>
+
 
 #include "vlog.h"
 #include "verror.h"
 #include "vcat_containers.h"
-#include "s11n_serial.h"
-#include "s11n_size.h"
 #include "vstring.h"
-#include "impl/tuple_helper.h"
-#include "impl/signature.h"
 
-#include "impl/crc.h"
-
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-
-#include <assert.h>
-
-#include "s11n_encoder.h"
-#include "s11n_decoder.h"
 
 #include "s11n.h"
+
 
 //static void print_plain_name_of_type();
 
 template <typename> class TD;
 
-using namespace s11n::impl;
+using namespace s11n;
 using namespace std;
 
 
@@ -43,27 +35,15 @@ using T5 = std::tuple<T1,T2,T3,T4>;
 
 int main()
 {
-    //{char,int32,int64}
-    vdeb.hex() << "signature:" << signature<tuple<>>() << ",crc:" << calc_crc(signature<tuple<>>());
-    vdeb.hex() << "crc<tuple<>>():" << crc<tuple<>>();
-    vdeb.hex() << "calc_crc({)" << calc_crc( "{" );
-    vdeb.hex() << "calc_crc({})" << calc_crc( "{}" );
-    //vdeb.hex() << signature<tuple<>>() << calc_crc(signature<tuple<>>()) ;
-    vdeb;
-    using ttt = tuple<char,bool>;
-    vdeb.hex() << "signature:" << signature<ttt>() << ",crc:" << calc_crc(signature<ttt>());
-    vdeb.hex() << "crc<tuple<>>():" << crc<ttt>();
-    vdeb.hex() << "calc_crc({)" << calc_crc( "{" );
-    vdeb.hex() << "calc_crc({})" << calc_crc( "{}" );
+    using T = set<vector<map<int,set<tuple<int,uint>>>>>;
+    vdeb << impl::signature<T>();
     return 0;
 
-    auto c = crc<T1>();
+    //auto c = crc<T1>();
     vdeb << signature<T1>();
     vdeb.hex() << calc_crc(signature<T1>()) << crc<T1>();
     vdeb.hex() << calc_crc(signature<T5>()) << crc<T5>();
     return 0;
-
-    using namespace s11n::impl;
 
     //vdeb << name_of_type_from_PF<int>();
     //vdeb << name_of_type_from_PF<vector<int>>();

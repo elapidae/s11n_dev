@@ -17,8 +17,8 @@ namespace impl
     //===================================================================================
     using crc_t = uint32_t;
 
-    static constexpr crc_t _crc_first_val = 0xFFFFFFFF;
-    static constexpr crc_t _crc_last_xor  = 0xFFFFFFFF;
+    static constexpr crc_t crc_first_val = 0xFFFFFFFF;
+    static constexpr crc_t crc_last_xor  = 0xFFFFFFFF;
     //===================================================================================
     constexpr uint32_t calc_crc_ch( char ch, uint32_t prev );
     //===================================================================================

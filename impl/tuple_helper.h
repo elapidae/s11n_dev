@@ -37,8 +37,8 @@ namespace impl
     template<typename T> constexpr
     bool is_tuple();
     //===================================================================================
-    template <typename T>
-    constexpr bool has_serial_tuple();
+    template<typename T> constexpr
+    bool has_serial_tuple();
     //===================================================================================
 
     //===================================================================================
