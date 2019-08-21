@@ -1,5 +1,4 @@
-#ifndef TUPLE_HELPER_H
-#define TUPLE_HELPER_H
+#pragma once
 
 #include <tuple>
 #include <type_traits>
@@ -136,5 +135,3 @@ namespace impl
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
-
-#endif // TUPLE_HELPER_H

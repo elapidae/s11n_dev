@@ -22,6 +22,8 @@
 #include "s11n_encoder.h"
 #include "s11n_decoder.h"
 
+#include "s11n.h"
+
 static void print_plain_name_of_type();
 
 template <typename> class TD;
@@ -158,8 +160,35 @@ using namespace std;
 
 template<class> class TD;
 
-int main()
+template<typename T>
+constexpr const char * foo()
 {
+    return __PRETTY_FUNCTION__;
+}
+
+struct ABC {
+    int8_t  i8;    int16_t i16;    int32_t i32;
+};
+
+namespace s11n {
+template<> struct Serial<ABC> {
+    static constexpr auto name_of_type = "My ABC";
+    static constexpr auto description = "ver. 1";
+
+    static constexpr std::tuple<int8_t, int16_t, int32_t>
+    to_tuple(const ABC& v) {
+        return std::make_tuple(v.i8, v.i16, v.i32);
+    }
+}; }
+
+int main() {
+    std::map<uint32_t, s11n::AbstractDecoder*> decoders;
+    decoders.emplace( s11n::crc<ABC>(),
+                      new s11n::Decoder<ABC>( [](ABC && abc) {
+                      cout << abc.a << abc.b << abc.c; }) );
+}
+
+/*
     vdeb << s11n::impl::name_of_type<std::vector<int>>();
     return 0;
     vector<int> vi;
@@ -270,7 +299,7 @@ static void print_plain_name_of_type()
     vdeb << name_of_type<float>();
     vdeb << name_of_type<double>();
 }
-
+*/
 
 
 

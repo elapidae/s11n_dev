@@ -27,7 +27,7 @@ namespace s11n
         template<typename T>
         static T decode( const std::string& buf );
 
-//        void process( const VString& buf );
+        void process( const std::string& buf );
 
         virtual void process( Reader* buf ) = 0;
         virtual ~AbstractDecoder() = default;
@@ -56,9 +56,29 @@ namespace s11n
         ProcessFunc _rfunc;
     };
     //===================================================================================
-
-    //===================================================================================
     //      IMPLEMENTATION
+    //===================================================================================
+    //    template<typename T>
+    //    Decoder<T>::Decoder( ProcessFunc rfunc )
+    //        : AbstractDecoder( hash_of_name<T>(), hash_of_signature<T>() )
+    //        , _rfunc(rfunc)
+    //    {}
+    //
+    //    template<typename T>
+    //    void Decoder<T>::process( ReadBuffer* buf )
+    //    {
+    //        _rfunc( std::move(decode<T>(buf)) );
+    //    }
+    template<typename T>
+    Decoder<T>::Decoder(Decoder::ProcessFunc rfunc)
+        : _rfunc( rfunc )
+    {}
+    //-----------------------------------------------------------------------------------
+    template<typename T>
+    void Decoder<T>::process( Reader * reader )
+    {
+        _rfunc( std::move(decode<T>(reader)) );
+    }
     //===================================================================================
     template<typename T>
     T AbstractDecoder::decode( Reader* reader )
@@ -74,19 +94,7 @@ namespace s11n
         // May check remained bytes in reader. If != 0 =>as error...
         return res;
     }
-    //-----------------------------------------------------------------------------------
-//    template<typename T>
-//    Decoder<T>::Decoder( ProcessFunc rfunc )
-//        : AbstractDecoder( hash_of_name<T>(), hash_of_signature<T>() )
-//        , _rfunc(rfunc)
-//    {}
-//    //-----------------------------------------------------------------------------------
-//    template<typename T>
-//    void Decoder<T>::process( ReadBuffer* buf )
-//    {
-//        _rfunc( std::move(decode<T>(buf)) );
-//    }
-//    //===================================================================================
+    //===================================================================================
 
     //===================================================================================
     //  NB! Здесь просится type folding!!!

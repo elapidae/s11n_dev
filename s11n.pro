@@ -4,7 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+    impl/crc.cpp \
         main.cpp \
+    only_crc.cpp \
     s11n_decoder.cpp \
     s11n_reader.cpp \
     s11n_serial.cpp \
@@ -25,6 +27,7 @@ HEADERS += \
     impl/tuple_helper.h \
     impl/type_spec.h \
     impl/writer.h \
+    only_crc.h \
     s11n.h \
     s11n_decoder.h \
     s11n_name_of_type.h \

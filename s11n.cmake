@@ -27,8 +27,12 @@ if ( NOT  S11N_INCLUDED )
 
     include_directories( "${S11N_DIR}/")
     
-    #set(HEADERS ${HEADERS} "${S11N_DIR}/s11n_.h")
-    #set(SOURCES ${SOURCES} "${S11N_DIR}/s11n_.cpp")
+    set(HEADERS ${HEADERS} "${S11N_DIR}/impl/str_view.h")
+
+    set(HEADERS ${HEADERS} "${S11N_DIR}/s11n.h")
+    set(HEADERS ${HEADERS} "${S11N_DIR}/s11n_name_of_type.h")
+    set(HEADERS ${HEADERS} "${S11N_DIR}/impl/name_of_type.h")
+    set(HEADERS ${HEADERS} "${S11N_DIR}/impl/name_of_type_from_pf.h")
 
     #set(HEADERS ${HEADERS} "${S11N_DIR}/s11n_.h")
     #set(SOURCES ${SOURCES} "${S11N_DIR}/s11n_.cpp")

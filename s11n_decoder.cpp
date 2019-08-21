@@ -1,5 +1,7 @@
 #include "s11n_decoder.h"
 
+#include "impl/reader.h"
+
 using namespace s11n;
 
 
@@ -13,3 +15,15 @@ using namespace s11n;
 //        throw DecodeError( "Buffer is not finished." );
 //}
 //=======================================================================================
+
+//template<typename T>
+//void Decoder::process(Reader *reader)
+//{
+//    decode
+//}
+
+//template<typename T>
+//void Decoder::process(Reader *reader)
+//{
+
+//}

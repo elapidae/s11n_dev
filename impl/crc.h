@@ -119,19 +119,7 @@ namespace impl
         0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
     };
     //-----------------------------------------------------------------------------------
-    uint32_t poly_04C11DB7( const std::string &buf )
-    {
-        uint32_t crc = 0xFFFFFFFF;
-        for ( auto ch: buf )
-        {
-            uint8_t uch  = static_cast<uint8_t>(ch);
-            uint8_t ucrc = static_cast<uint8_t>(crc);
-            uint8_t idx = ucrc ^ uch;
-            crc = (crc >> 8) ^ _poly_04C11DB7_table[idx];
-        }
-        crc ^= 0xFFFFFFFF;
-        return crc;
-    }
+    uint32_t poly_04C11DB7( const std::string &buf );
     //===================================================================================
 
     //===================================================================================
