@@ -1,4 +1,6 @@
-#pragma once
+#ifndef S11N_IMPL_TUPLE_HELPER_H
+#define S11N_IMPL_TUPLE_HELPER_H
+
 
 #include <tuple>
 #include <type_traits>
@@ -30,6 +32,8 @@
 //  декодер сможет инстанцировать объект.
 //
 //=======================================================================================
+namespace s11n { template<typename> struct Serial; }
+
 namespace s11n {
 namespace impl
 {
@@ -39,6 +43,9 @@ namespace impl
     //===================================================================================
     template<typename T> constexpr
     bool has_serial_tuple();
+    //===================================================================================
+    template<typename T>
+    using serial_tuple_type = decltype(s11n::Serial<T>::to_tuple(std::declval<T>()));
     //===================================================================================
 
     //===================================================================================
@@ -121,21 +128,33 @@ namespace impl
         : std::true_type
     {};
     //-----------------------------------------------------------------------------------
+    //  Проверка, что to_tuple() возвращает какой-то кортеж.
+    template<typename T> constexpr typename std::enable_if<
+    _has_serial_tuple<T>::value, bool>::type
+    _serial_method_is_tuple()
+    {
+        return is_tuple<serial_tuple_type<T>>();
+    }
+
+    template<typename T> constexpr typename std::enable_if<
+    !_has_serial_tuple<T>::value, bool>::type
+    _serial_method_is_tuple()
+    {
+        return false;
+    }
+
     template <typename T>
     constexpr bool has_serial_tuple()
     {
-        static_assert (  !_has_serial_tuple<T>::value ||
-                        ( _has_serial_tuple<T>::value && is_tuple<T>() ),
-                         "Serial<T>::to_tuple() must return std::tuple only." );
+        static_assert( !_has_serial_tuple<T>::value ||
+                       _serial_method_is_tuple<T>(),
+                       "Serial<T>::to_tuple() must return std::tuple only." );
 
         return _has_serial_tuple<T>::value;
     }
     //===================================================================================
-
-    //===================================================================================
-    template <typename T>
-    using serial_tuple_type = decltype( s11n::Serial<T>::to_tuple(std::declval<T>()) );
-    //===================================================================================
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
+
+#endif // S11N_IMPL_TUPLE_HELPER_H

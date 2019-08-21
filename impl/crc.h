@@ -1,4 +1,5 @@
-#pragma once
+#ifndef S11N_IMPL_CRC_H
+#define S11N_IMPL_CRC_H
 
 #include "vlog.h"
 #include "impl/str_view.h"
@@ -137,3 +138,5 @@ namespace impl
 //=======================================================================================
 //      Implementation
 //=======================================================================================
+
+#endif // S11N_IMPL_CRC_H

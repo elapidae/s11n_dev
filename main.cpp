@@ -33,8 +33,53 @@ using T4 = std::tuple<T1,T2,T3>;
 using T5 = std::tuple<T1,T2,T3,T4>;
 
 
+namespace s11n {
+template<>
+struct Serial<AAA>
+{
+    static constexpr auto name_of_type = "MyAAA";
+    static constexpr auto description = "Ok";
+    static std::tuple<int> to_tuple( const AAA& ) { return {42}; }
+    //static int to_tuple( const AAA& ) { return {42}; }
+};
+}
+
+template<typename T>
+struct TTT
+{};
+
+template<typename T, typename Sub, typename ... >
+struct _is_any_metatype : public false_type {};
+
+//template<typename T>
+//struct _is_any_metatype<T, T<Sub>> : public false_type {};
+
+template< typename...>
+constexpr bool is_metatype()
+{
+    return false;
+}
+
+template< template<typename...> class MetaT, typename ... Args >
+constexpr bool is_metatype()
+{
+    return true;
+}
+
+
+
 int main()
 {
+    vdeb << signature<TTT<int>>();
+    vdeb << is_metatype<int>();
+    vdeb << is_metatype<TTT>();
+
+//    vdeb.hex() << calc_crc(signature<AAA>()) << crc<AAA>();
+//    vdeb << impl::is_tuple<tuple<int>>();
+//    vdeb << impl::_has_serial_tuple<AAA>();
+//    vdeb << impl::_has_serial_tuple<BBB>();
+    return 0;
+
     using T = set<vector<map<int,set<tuple<int,uint>>>>>;
     vdeb << impl::signature<T>();
     return 0;

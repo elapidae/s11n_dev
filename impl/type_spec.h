@@ -1,4 +1,5 @@
-#pragma once
+#ifndef S11N_IMPL_TYPE_SPEC_H
+#define S11N_IMPL_TYPE_SPEC_H
 
 #include "impl/tuple_helper.h"
 #include "impl/container_helper.h"
@@ -46,7 +47,7 @@ namespace impl
 //      _has_serial_read<T>()
 //      _has_serial_write<T>()
 //      has_serial_read_write<T>()
-//      spec_of<T>()
+//      type_spec_of<T>()
 //=======================================================================================
 namespace s11n {
 namespace impl
@@ -113,7 +114,7 @@ namespace impl
                        ( _has_serial_read<SerT>() &&  _has_serial_write<SerT>()),
                         "Define both Serial<T>::read && write" );
 
-        return _has_serial_read<SerT>() &&  _has_serial_write<SerT>();
+        return _has_serial_read<SerT>() && _has_serial_write<SerT>();
     }
     //===================================================================================
     template<typename SerT> constexpr
@@ -148,8 +149,8 @@ namespace impl
     template<typename T> constexpr
     type_spec type_spec_of()
     {
-        static_assert ( _type_spec_of<T>() != type_spec::error,
-                        "Cannot define spec of type" );
+        static_assert( _type_spec_of<T>() != type_spec::error,
+                       "Cannot define spec of type" );
 
         return _type_spec_of<T>();
     }
@@ -157,3 +158,5 @@ namespace impl
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
+
+#endif // S11N_IMPL_TYPE_SPEC_H
