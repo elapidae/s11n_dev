@@ -1,7 +1,7 @@
-#pragma once
+#ifndef S11N_IMPL_STR_VIEW
+#define S11N_IMPL_STR_VIEW
 
 #include <string>
-
 
 //=======================================================================================
 namespace s11n {
@@ -20,9 +20,23 @@ namespace impl
         operator std::string() const { return str(); }
     };
     //===================================================================================
-    std::ostream& operator << ( std::ostream& os, const str_view& sv );
+    //  Индекс первого найденного символа в строке. Здесь вход в рекурсию.
+    constexpr size_t str_index_of( const char *src, char pattern );
     //===================================================================================
+    //  length -- for comfort.
+    constexpr size_t str_length( const char *src );
+    //===================================================================================
+} // namespace impl
+} // namespace s11n
+//=======================================================================================
 
+
+//=======================================================================================
+//      Implementation
+//=======================================================================================
+namespace s11n {
+namespace impl
+{
     //===================================================================================
     //  Индекс первого найденного символа в строке, в рекурсии.
     //  См. _index_of()
@@ -37,13 +51,13 @@ namespace impl
     }
     //===================================================================================
     //  Индекс первого найденного символа в строке. Здесь вход в рекурсию.
-    static constexpr size_t str_index_of( const char *src, char pattern )
+    constexpr size_t str_index_of( const char *src, char pattern )
     {
         return _index_of_with_recurse( src, pattern, 0 );
     }
     //===================================================================================
     //  length -- for comfort.
-    static constexpr size_t str_length( const char *src )
+    constexpr size_t str_length( const char *src )
     {
         return str_index_of( src, '\0' );
     }
@@ -51,3 +65,5 @@ namespace impl
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
+
+#endif // S11N_IMPL_STR_VIEW

@@ -11,7 +11,6 @@ SOURCES += \
     s11n_serial.cpp \
     s11n_size.cpp \
     s11n_encoder.cpp \
-    impl/str_view.cpp \
     s11n_writer.cpp
 
 HEADERS += \
