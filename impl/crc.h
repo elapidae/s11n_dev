@@ -1,26 +1,31 @@
 #pragma once
 
-#include "impl/tuple_helper.h"
-#include "impl/name_of_type.h"
-#include "impl/description.h"
-#include "impl/signature.h"
+#include "vlog.h"
+#include "impl/str_view.h"
 
 
 //=======================================================================================
+//
 //  Для расчета CRC использован один из стандартных полиномов: 04C11DB7.
+//  UPD 2019-08-21 -- Расчет CRC перенесен в signature.h, здесь оставлены только
+//  входные функции и предрасчетная таблица.
+//
 //=======================================================================================
 namespace s11n {
 namespace impl
 {
     //===================================================================================
-    //  Считает CRC сигнатуры в compile-time. Саму сигнатуру при этом не производит.
-    //  Если она будет меняться, то и этот код надо будет подправлять.
-    //
-    template <typename T>
-    constexpr uint32_t crc();
+    using crc_t = uint32_t;
+
+    static constexpr crc_t _crc_first_val = 0xFFFFFFFF;
+    static constexpr crc_t _crc_last_xor  = 0xFFFFFFFF;
+    //===================================================================================
+    constexpr uint32_t calc_crc_ch( char ch, uint32_t prev );
+    //===================================================================================
+    constexpr uint32_t calc_crc_str( const str_view & str, uint32_t prev );
     //===================================================================================
     //  Для проверки.
-    uint32_t poly_04C11DB7( const std::string &buf );
+    uint32_t calc_crc( const std::string& buf );
     //===================================================================================
 } // namespace impl
 } // namespace s11n
@@ -35,21 +40,6 @@ namespace impl
 namespace s11n {
 namespace impl
 {
-    //===================================================================================
-    //  Предварительное объявление обязательно, они вызывают друг друга рекурсивно.
-    //
-    template <typename T> constexpr typename
-    std::enable_if< is_tuple<T>(), uint32_t>::type _crc(uint32_t prev);
-    //
-    template <typename T> constexpr typename
-    std::enable_if< has_serial_tuple<T>(), uint32_t>::type _crc(uint32_t prev);
-    //
-    template <typename T> constexpr typename
-    std::enable_if< !is_tuple<T>() &&
-                    !has_serial_tuple<T>(), uint32_t>::type _crc(uint32_t prev);
-    //===================================================================================
-
-
     //===================================================================================
     constexpr uint32_t _poly_04C11DB7_table[256] =
     {
@@ -118,144 +108,29 @@ namespace impl
         0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
         0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
     };
-    //-----------------------------------------------------------------------------------
-    uint32_t poly_04C11DB7( const std::string &buf );
     //===================================================================================
 
     //===================================================================================
     //  Пошаговое вычисление CRC
-    constexpr uint32_t _crc_ch_step( char ch, uint32_t prev )
+    constexpr uint32_t calc_crc_ch( char ch, uint32_t prev )
     {
         return (prev >> 8) ^ _poly_04C11DB7_table[ uint8_t(uint8_t(prev)^uint8_t(ch)) ];
     }
+    //-----------------------------------------------------------------------------------
     //  Итерации внутри строки.
-    constexpr uint32_t _crc_ch_recurse( const str_view& sw, uint pos, uint32_t prev )
+    constexpr uint32_t _crc_str_recurse( const str_view& sw, uint pos, uint32_t prev )
     {
         return pos == sw.len
                     ? prev
-                    : _crc_ch_recurse( sw, pos + 1, _crc_ch_step( sw.ptr[pos],prev) );
+                    : _crc_str_recurse( sw, pos + 1, calc_crc_ch( sw.ptr[pos],prev) );
     }
+    //-----------------------------------------------------------------------------------
     //  Считаем всю строку целиком.
-    constexpr uint32_t _crc_str( const str_view& sw, uint32_t prev )
+    constexpr uint32_t calc_crc_str( const str_view & sw, uint32_t prev )
     {
-        return _crc_ch_recurse( sw, 0, prev );
+        return _crc_str_recurse( sw, 0, prev );
     }
     //
-    //===================================================================================
-
-
-    //===================================================================================
-    //  Итерируем до тех пор, пока не достигнем последнего элемента, когда достигнем,
-    //  установим индекс в -1 и выйдем через специализированную структуру.
-    //
-    //  Тогда как в сигнатуре закрывающую скобочку можно было подредактировать на выходе,
-    //  здесь приходится считать непременно в return-e.
-    //
-    template<int idx, typename atuple>
-    struct _tuple_crc
-    {
-        static constexpr uint32_t calc_crc( uint32_t prev )
-        {
-            using element = tuple_element<atuple,idx>;
-
-            //  Brain collapsing with one return...
-            return _tuple_crc<tuple_next_idx<idx,atuple>(),atuple>::calc_crc
-            (
-                _crc_ch_step
-                (
-                    tuple_next_idx<idx,atuple>() > 0 ? ',' : '}',
-                    _crc<element>( prev )
-                )
-            );
-        }
-    };
-    //-----------------------------------------------------------------------------------
-    //  Скобочку опять надо "закрывать" на месте.
-    template<typename atuple>
-    struct _tuple_crc<-1,atuple>
-    {
-        static constexpr uint32_t calc_crc( uint32_t prev )
-        {
-            return tuple_size<atuple>() != 0
-                    ? prev
-                    : _crc_ch_step('}', prev);
-        }
-    };
-    //-----------------------------------------------------------------------------------
-    template<typename atuple> constexpr
-    uint32_t tuple_crc( uint32_t prev )
-    {
-        return _tuple_crc<tuple_start_idx<atuple>(),atuple>::calc_crc
-        (
-            _crc_ch_step( '{', prev )
-        );
-    }
-    //===================================================================================
-
-    //===================================================================================
-    //  Вложенный ужос, но, в 11-м Стандарте по другому никак.
-    template <typename T> constexpr
-    uint32_t _crc_of_description( uint32_t prev )
-    {
-        return
-        _crc_str
-        (
-            description_in_squares<T>()[2], _crc_str
-            (
-                description_in_squares<T>()[1], _crc_str
-                (
-                    description_in_squares<T>()[0],
-                    prev
-                )
-            )
-        );
-    }
-    //===================================================================================
-    template <typename T> constexpr
-    uint32_t _crc_of_name( uint32_t prev )
-    {
-        return _crc_str( name_of_type<T>(), prev );
-    }
-    //===================================================================================
-    template <typename T> constexpr typename
-    std::enable_if< is_tuple<T>(), uint32_t>::type
-    _crc( uint32_t prev )
-    {
-        return tuple_crc<T>( prev );
-    }
-    //-----------------------------------------------------------------------------------
-    template <typename T> constexpr typename
-    std::enable_if< has_serial_tuple<T>(), uint32_t>::type
-    _crc( uint32_t prev )
-    {
-        return
-        tuple_crc<serial_tuple_type<T>>
-        (
-            _crc_of_description<T>
-            (
-                _crc_of_name<T>( prev )
-            )
-        );
-    }
-    //-----------------------------------------------------------------------------------
-    template <typename T> constexpr typename
-    std::enable_if< !is_tuple<T>() &&
-                    !has_serial_tuple<T>(), uint32_t>::type
-    _crc( uint32_t prev )
-    {
-        return _crc_of_description<T>
-        (
-            _crc_of_name<T>( prev )
-        );
-    }
-    //===================================================================================
-
-    //===================================================================================
-    template <typename T>
-    constexpr uint32_t crc()
-    {
-        return 0xFFFFFFFF ^ _crc<T>( 0xFFFFFFFF );
-    }
     //===================================================================================
 } // namespace impl
 } // namespace s11n

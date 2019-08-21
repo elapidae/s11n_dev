@@ -2,7 +2,6 @@
 #define S11N_H
 
 
-#include "s11n_name_of_type.h"
 #include "impl/std_string.h"
 #include "impl/signature.h"
 #include "impl/crc.h"

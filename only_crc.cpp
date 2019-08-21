@@ -3,7 +3,6 @@
 //#include "impl/tuple_helper.h"
 //#include "impl/name_of_type.h"
 //#include "impl/description.h"
-//#include "impl/signature.h"
 
 //#include "impl/str_view.h"
 //#include "impl/name_of_type_from_pf.h"
@@ -815,12 +814,6 @@ namespace impl
     }
     //===================================================================================
 
-    //===================================================================================
-    template <typename T>
-    constexpr uint32_t crc()
-    {
-        return 0xFFFFFFFF ^ _crc<T>( 0xFFFFFFFF );
-    }
     //===================================================================================
 } // namespace impl
 } // namespace s11n
