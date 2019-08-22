@@ -1,7 +1,6 @@
 #ifndef S11N_IMPL_CRC_H
 #define S11N_IMPL_CRC_H
 
-#include "vlog.h"
 #include "impl/str_view.h"
 
 
@@ -16,17 +15,17 @@ namespace s11n {
 namespace impl
 {
     //===================================================================================
-    using crc_t = uint32_t;
+    using crc_type = uint32_t;
 
-    static constexpr crc_t crc_first_val = 0xFFFFFFFF;
-    static constexpr crc_t crc_last_xor  = 0xFFFFFFFF;
+    static constexpr crc_type crc_first_val = 0xFFFFFFFF;
+    static constexpr crc_type crc_last_xor  = 0xFFFFFFFF;
     //===================================================================================
-    constexpr uint32_t calc_crc_ch( char ch, uint32_t prev );
+    constexpr crc_type calc_crc_ch( char ch, crc_type prev );
     //===================================================================================
-    constexpr uint32_t calc_crc_str( const str_view & str, uint32_t prev );
+    constexpr crc_type calc_crc_str( const str_view& str, crc_type prev );
     //===================================================================================
     //  Для проверки.
-    uint32_t calc_crc( const std::string& buf );
+    crc_type calc_crc( const std::string& buf );
     //===================================================================================
 } // namespace impl
 } // namespace s11n
@@ -42,7 +41,7 @@ namespace s11n {
 namespace impl
 {
     //===================================================================================
-    constexpr uint32_t _poly_04C11DB7_table[256] =
+    constexpr crc_type _poly_04C11DB7_table[256] =
     {
         0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA,
         0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
@@ -113,30 +112,29 @@ namespace impl
 
     //===================================================================================
     //  Пошаговое вычисление CRC
-    constexpr uint32_t calc_crc_ch( char ch, uint32_t prev )
+    constexpr crc_type calc_crc_ch( char ch, crc_type prev )
     {
         return (prev >> 8) ^ _poly_04C11DB7_table[ uint8_t(uint8_t(prev)^uint8_t(ch)) ];
     }
     //-----------------------------------------------------------------------------------
     //  Итерации внутри строки.
-    constexpr uint32_t _crc_str_recurse( const str_view& sw, uint pos, uint32_t prev )
+    constexpr crc_type _crc_str_recurse( const str_view& str, uint pos, crc_type prev )
     {
-        return pos == sw.len
+        return pos == str.len
                     ? prev
-                    : _crc_str_recurse( sw, pos + 1, calc_crc_ch( sw.ptr[pos],prev) );
+                    : _crc_str_recurse( str, pos + 1, calc_crc_ch( str.ptr[pos],prev) );
     }
     //-----------------------------------------------------------------------------------
     //  Считаем всю строку целиком.
-    constexpr uint32_t calc_crc_str( const str_view & sw, uint32_t prev )
+    constexpr crc_type calc_crc_str( const str_view& str, crc_type prev )
     {
-        return _crc_str_recurse( sw, 0, prev );
+        return _crc_str_recurse( str, 0, prev );
     }
     //
     //===================================================================================
 } // namespace impl
 } // namespace s11n
 //=======================================================================================
-//      Implementation
-//=======================================================================================
+
 
 #endif // S11N_IMPL_CRC_H

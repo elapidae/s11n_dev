@@ -18,6 +18,9 @@ HEADERS += \
     impl/endian.h \
     impl/signature.h \
     impl/crc.h \
+    impl/signature_1_name_of_type.h \
+    impl/signature_2_description.h \
+    impl/signature_3_serial_tuple.h \
     impl/std_string.h \
     impl/std_void_t.h \
     impl/tuple_helper.h \

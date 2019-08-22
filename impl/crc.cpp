@@ -4,7 +4,7 @@
 namespace s11n {
 namespace impl {
     //===================================================================================
-    uint32_t calc_crc( const std::string& buf )
+    crc_type calc_crc( const std::string& buf )
     {
         uint32_t crc = crc_first_val;
         for ( auto ch: buf )

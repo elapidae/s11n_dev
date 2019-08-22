@@ -135,17 +135,21 @@ namespace impl
     {
         return is_tuple<serial_tuple_type<T>>();
     }
-
+    //-----------------------------------------------------------------------------------
     template<typename T> constexpr typename std::enable_if<
     !_has_serial_tuple<T>::value, bool>::type
     _serial_method_is_tuple()
     {
         return false;
     }
-
+    //-----------------------------------------------------------------------------------
     template <typename T>
     constexpr bool has_serial_tuple()
     {
+        static_assert ( !_has_serial_tuple<T>::value ||
+                        !std::is_arithmetic<T>::value,
+                        "Arithmetic types cannot have Serial<T>::to_tuple()." );
+
         static_assert( !_has_serial_tuple<T>::value ||
                        _serial_method_is_tuple<T>(),
                        "Serial<T>::to_tuple() must return std::tuple only." );

@@ -34,79 +34,42 @@ using T5 = std::tuple<T1,T2,T3,T4>;
 
 
 namespace s11n {
-template<>
-struct Serial<AAA>
-{
-    static constexpr auto name_of_type = "MyAAA";
-    static constexpr auto description = "Ok";
-    static std::tuple<int> to_tuple( const AAA& ) { return {42}; }
-    //static int to_tuple( const AAA& ) { return {42}; }
-};
-}
-
-template<typename T>
-struct TTT
-{};
-
-template<typename T, typename Sub, typename ... >
-struct _is_any_metatype : public false_type {};
-
-//template<typename T>
-//struct _is_any_metatype<T, T<Sub>> : public false_type {};
-
-template< typename...>
-constexpr bool is_metatype()
-{
-    return false;
-}
-
-template< template<typename...> class MetaT, typename ... Args >
-constexpr bool is_metatype()
-{
-    return true;
+    template<>
+    struct Serial<AAA>
+    {
+        static constexpr auto name_of_type = "MyAAA";
+        static constexpr auto description = "Ok";
+        static std::tuple<int> to_tuple( const AAA& ) { return {42}; }
+        //static int to_tuple( const AAA& ) { return {42}; }
+    };
+    template<>
+    struct Serial<int>
+    {
+//        static constexpr auto name_of_type = "OwnInt";
+//        static constexpr auto description = "DesInt";
+//        static std::tuple<int> to_tuple( const int& ) { return {42}; }
+    };
 }
 
 
 
+template<typename ... T> struct TTT {};
+template<typename ... T> struct CCCC { explicit CCCC(int){} int foo() {} };
 int main()
 {
-    vdeb << signature<TTT<int>>();
-    vdeb << is_metatype<int>();
-    vdeb << is_metatype<TTT>();
-
-//    vdeb.hex() << calc_crc(signature<AAA>()) << crc<AAA>();
-//    vdeb << impl::is_tuple<tuple<int>>();
-//    vdeb << impl::_has_serial_tuple<AAA>();
-//    vdeb << impl::_has_serial_tuple<BBB>();
-    return 0;
-
-    using T = set<vector<map<int,set<tuple<int,uint>>>>>;
-    vdeb << impl::signature<T>();
-    return 0;
-
-    //auto c = crc<T1>();
-    vdeb << signature<T1>();
-    vdeb.hex() << calc_crc(signature<T1>()) << crc<T1>();
-    vdeb.hex() << calc_crc(signature<T5>()) << crc<T5>();
-    return 0;
-
-    //vdeb << name_of_type_from_PF<int>();
-    //vdeb << name_of_type_from_PF<vector<int>>();
-
-    vdeb << signature<int>();
-    vdeb << signature<vector<int>>();
+    vdeb << std::is_arithmetic<AAA>::value;
+    vdeb << std::is_arithmetic<int>::value;
+    //return 0;
+    //vdeb << impl::has_serial_description<int>();
+    //vdeb << impl::has_serial_description<AAA>();
 
     vdeb << signature<AAA>();
-    vdeb << signature<BBB>();
-    vdeb << signature<CCC>();
-    vdeb << signature<T1>();
-    vdeb << signature<T2>();
-    vdeb << signature<T3>();
-    vdeb << signature<T4>();
-    vdeb << signature<T5>();
+    //vdeb << crc<__int128>();
+    //return 0;
 
-    vdeb.hex() << calc_crc(signature<AAA>()) << crc<AAA>();
-    vdeb.hex() << calc_crc(signature<T1>()) << crc<T1>();
+    vdeb << signature< TTT<int,char,TTT<bool,bool,CCCC<uint,float>>>
+                     >();
+    vdeb << signature<TTT<>>();
 }
 
 
