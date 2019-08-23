@@ -1,19 +1,39 @@
-#ifndef ENDIAN_H
-#define ENDIAN_H
+#ifndef S11N_IMPL_ENDIAN_H
+#define S11N_IMPL_ENDIAN_H
 
-#include <type_traits>
 #include <endian.h>
+#include <type_traits>
 
+
+//=======================================================================================
 namespace s11n {
-namespace impl {
+namespace impl
+{
+    //===================================================================================
+    //  Функция выворачивает число наизнанку, если архитектура big_endian.
+    template <typename T> typename std::enable_if<std::is_arithmetic<T>::value,T>::type
+    little_endian( T val );
+    //===================================================================================
+} // namespace impl
+} // namespace s11n
+//=======================================================================================
 
+
+//=======================================================================================
+namespace s11n {
+namespace impl
+{
     //===================================================================================
     //  Функция выворачивает число наизнанку, если архитектура big_endian.
     template <typename T> typename std::enable_if<std::is_arithmetic<T>::value,T>::type
     little_endian( T val )
     {
-        static_assert( sizeof(T) <= 8 && (sizeof(T) == 1 || sizeof(T) % 2 == 0),
+        static_assert( sizeof(T) == 1 || sizeof(T) == 2 ||
+                       sizeof(T) == 4 || sizeof(T) == 8,
                        "Strange size of T, must be 1 or 2 or 4 or 8." );
+
+        static_assert ( BYTE_ORDER == LITTLE_ENDIAN || BYTE_ORDER == BIG_ENDIAN,
+                        "Cannot define endian." );
 
       #if BYTE_ORDER == LITTLE_ENDIAN
         // nothing to do...
@@ -35,9 +55,8 @@ namespace impl {
         return val;
     }
     //===================================================================================
-
-
 } // namespace impl
 } // namespace s11n
+//=======================================================================================
 
-#endif // ENDIAN_H
+#endif // S11N_IMPL_ENDIAN_H

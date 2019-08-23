@@ -39,6 +39,9 @@ if ( NOT  S11N_INCLUDED )
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_3_serial_tuple.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature.h")
 
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/size.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/encode.h")
+
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_string.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n.h")

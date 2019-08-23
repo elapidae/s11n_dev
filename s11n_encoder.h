@@ -90,7 +90,7 @@ namespace s11n
     {
         static void write( const T& val, Writer* writer )
         {
-            s11n::Size sz( val.size() );
+            Size sz( val.size() );
             Encoder::encode( sz, writer );
 
             for ( const auto & elem: val )

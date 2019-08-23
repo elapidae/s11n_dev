@@ -3,6 +3,8 @@
 
 #include "impl/signature.h"
 #include "impl/std_string.h"
+#include "impl/encode.h"
+#include "impl/decode.h"
 
 //=======================================================================================
 namespace s11n
@@ -20,8 +22,14 @@ namespace s11n
         return impl::signature_crc<T>();
     }
     //===================================================================================
-    using impl::calc_crc; //( const std::string& );
+    using impl::calc_crc;   //( const std::string& );
     using impl::crc_type;
+    //===================================================================================
+    using impl::encode;     //  std::string encode( const T& val );
+                            //  void encode( const T& val, Writer* writer );
+    //===================================================================================
+    using impl::decode;     //  T decode( Reader* reader );
+                            //  T decode( const std::string& buf );
     //===================================================================================
 } // namespace s11n
 //=======================================================================================

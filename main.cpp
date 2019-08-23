@@ -14,8 +14,6 @@
 #include "s11n.h"
 
 
-//static void print_plain_name_of_type();
-
 template <typename> class TD;
 
 using namespace s11n;
@@ -93,32 +91,23 @@ void prn()
     vdeb << calc_crc(signature<T>()) << signature_crc<T>() << signature<T>();
 }
 
+//template<typename R, typename ...Ts>
+
+
 int main()
 {
-    using T = tuple<int16_t, char, bool>;
-    using V = vector<uint64_t>;
-    using T2 = tuple<T,V,A>;
-    using C = map<int,T2>;
-    using UM = unordered_map<int,C>;
-    using T3 = tuple<C,T2,V,T,UM>;
+    A a{0x31, true, 0x12345678};
 
-    vdeb << signature<T3>();
+    using TIII = tuple <int,int,int>;
 
-    vdeb << signature_crc<T3>() << calc_crc( signature<T3>() );
-    vdeb;
-    vdeb;
-    vdeb;
-    prn<T>();
-    prn<V>();
-    prn<A>();
-    vdeb;
-    vdeb;
-    prn<C>();
-    prn<T2>();
-    prn<V>();
-    prn<T>();
-    prn<UM>();
-    return 0;
+    TIII t1{1,2,3};
+
+    vdeb << VString(encode(a)).to_Hex();
+
+    auto str = encode(t1);
+    vdeb << VString( str ).to_Hex();
+    auto dt1 = decode<decltype(t1)>( str );
+    vdeb << get<0>(dt1) << get<1>(dt1) << get<2>(dt1);
 
     //TD<decltype(i)> ddd;
     //vdeb << signature<TTT<decltype(i)>>();
