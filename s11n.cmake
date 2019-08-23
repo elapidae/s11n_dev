@@ -27,15 +27,24 @@ if ( NOT  S11N_INCLUDED )
 
     include_directories( "${S11N_DIR}/")
     
-    set(HEADERS ${HEADERS} "${S11N_DIR}/impl/str_view.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/str_view.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_void_t.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/crc.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/tuple_helper.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/container_helper.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/name_of_type_from_pf.h")
 
-    set(HEADERS ${HEADERS} "${S11N_DIR}/s11n.h")
-    set(HEADERS ${HEADERS} "${S11N_DIR}/s11n_name_of_type.h")
-    set(HEADERS ${HEADERS} "${S11N_DIR}/impl/name_of_type.h")
-    set(HEADERS ${HEADERS} "${S11N_DIR}/impl/name_of_type_from_pf.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_1_name_of_type.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_2_description.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_3_serial_tuple.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature.h")
 
-    #set(HEADERS ${HEADERS} "${S11N_DIR}/s11n_.h")
-    #set(SOURCES ${SOURCES} "${S11N_DIR}/s11n_.cpp")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_string.h")
+
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n.h")
+
+    #set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n_.h")
+    #set(S11N_SOURCES ${S11N_SOURCES} "${S11N_DIR}/s11n_.cpp")
 
 
     message( " === s11n included === " )

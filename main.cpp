@@ -51,25 +51,79 @@ namespace s11n {
     };
 }
 
+void foo(){}
 
-
+template<class> class TD;
 template<typename ... T> struct TTT {};
-template<typename ... T> struct CCCC { explicit CCCC(int){} int foo() {} };
+template<typename ... T> struct CCCC { explicit CCCC(int){} int foo() {return 3;} };
+
+struct A
+{
+    char   c;
+    bool   b;
+    int32_t i;
+};
+
+template <class T>
+struct Point
+{
+    T x, y, z;
+};
+using PointF = Point<float>;
+using PointD = Point<double>;
+using PointI = Point<int64_t>;
+
+namespace s11n {
+template<> struct Serial<A>
+{
+//    static constexpr auto name_of_type = "Own_A";
+//    static constexpr auto description = "ver.1";
+
+    static tuple<char,bool,int32_t> to_tuple(const A& a)
+    {
+        return make_tuple( a.c, a.b, a.i );
+    }
+};
+}
+
+
+template<typename T>
+void prn()
+{
+    vdeb << calc_crc(signature<T>()) << signature_crc<T>() << signature<T>();
+}
+
 int main()
 {
-    vdeb << std::is_arithmetic<AAA>::value;
-    vdeb << std::is_arithmetic<int>::value;
-    //return 0;
-    //vdeb << impl::has_serial_description<int>();
-    //vdeb << impl::has_serial_description<AAA>();
+    using T = tuple<int16_t, char, bool>;
+    using V = vector<uint64_t>;
+    using T2 = tuple<T,V,A>;
+    using C = map<int,T2>;
+    using UM = unordered_map<int,C>;
+    using T3 = tuple<C,T2,V,T,UM>;
 
-    vdeb << signature<AAA>();
-    //vdeb << crc<__int128>();
-    //return 0;
+    vdeb << signature<T3>();
 
-    vdeb << signature< TTT<int,char,TTT<bool,bool,CCCC<uint,float>>>
-                     >();
-    vdeb << signature<TTT<>>();
+    vdeb << signature_crc<T3>() << calc_crc( signature<T3>() );
+    vdeb;
+    vdeb;
+    vdeb;
+    prn<T>();
+    prn<V>();
+    prn<A>();
+    vdeb;
+    vdeb;
+    prn<C>();
+    prn<T2>();
+    prn<V>();
+    prn<T>();
+    prn<UM>();
+    return 0;
+
+    //TD<decltype(i)> ddd;
+    //vdeb << signature<TTT<decltype(i)>>();
+    //vdeb << signature<TTT<int*>>();
+    //vdeb << signature<TTT<decltype(foo)>>();
 }
 
 

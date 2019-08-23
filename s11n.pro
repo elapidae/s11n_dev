@@ -4,7 +4,6 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-    impl/crc.cpp \
         main.cpp \
     s11n_decoder.cpp \
     s11n_reader.cpp \

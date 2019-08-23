@@ -11,6 +11,8 @@ project( test_s11n )
 find_library( GTEST_LIBRARY      NAMES libgtest.a      PATHS ${EXT_LIBS_PATH} )
 find_library( GTEST_MAIN_LIBRARY NAMES libgtest_main.a PATHS ${EXT_LIBS_PATH} )
 
+set( HEADERS ${HEADERS} ${S11N_HEADERS} )
+set( SOURCES ${SOURCES} ${S11N_SOURCES} )
 
 add_executable( ${PROJECT_NAME} "main.cpp" ${HEADERS} ${SOURCES} )
 

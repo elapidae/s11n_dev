@@ -84,8 +84,8 @@ namespace impl
         as_pretty_func
     };
     //-----------------------------------------------------------------------------------
-    template<typename...Ts> constexpr
-    bool _is_metatype( const Ts* ... )
+    template<typename T> constexpr
+    bool _is_metatype( const T* )
     {
         return false;
     }
@@ -99,7 +99,6 @@ namespace impl
     template<typename T> constexpr
     bool is_metatype()
     {
-        //return _is_metatype( *_const_ptr<T>() );
         return _is_metatype( static_cast<T*>(nullptr) );
     }
     //-----------------------------------------------------------------------------------
@@ -216,9 +215,9 @@ namespace impl
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
         {
-            return crc_ch( '>',
+            return calc_crc_ch( '>',
                         calc_crc_T<_vt>(
-                            calc_crc_ch( '>',
+                            calc_crc_ch( '<',
                                 calc_crc_str( name_of_type(), prev )
                             )
                         )

@@ -30,7 +30,7 @@ namespace impl
     std::string signature();
     //===================================================================================
     template <typename T> constexpr
-    crc_type crc();
+    crc_type signature_crc();
     //===================================================================================
 }}
 //=======================================================================================
@@ -46,9 +46,27 @@ namespace impl
     //===================================================================================
     //      Result wrap
     //===================================================================================
+    template <typename T> constexpr
+    bool test_type()
+    {
+        static_assert ( !std::is_pointer<T>::value,
+                        "s11n::signature don't work with pointers." );
+        static_assert ( !std::is_member_pointer<T>::value,
+                        "s11n::signature don't work with member pointers." );
+        static_assert ( !std::is_member_function_pointer<T>::value,
+                        "s11n::signature don't work with member function pointers." );
+        static_assert ( !std::is_function<T>::value,
+                        "s11n::signature don't work with functions." );
+        static_assert ( !std::is_array<T>::value,
+                        "s11n::signature don't work with arrays. "
+                        "Use std::array instead." );
+        return true;
+    }
+    //===================================================================================
     template <typename T>
     std::string signature()
     {
+        static_assert( test_type<T>(), "");
         return signature_3<T>();
     }
     //-----------------------------------------------------------------------------------
@@ -59,8 +77,9 @@ namespace impl
     }
     //-----------------------------------------------------------------------------------
     template <typename T>
-    constexpr crc_type crc()
+    constexpr crc_type signature_crc()
     {
+        static_assert( test_type<T>(), "");
         return crc_last_xor ^ calc_crc_T<T>( crc_first_val );
     }
     //===================================================================================

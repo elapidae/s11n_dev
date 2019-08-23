@@ -25,7 +25,7 @@ namespace impl
     constexpr crc_type calc_crc_str( const str_view& str, crc_type prev );
     //===================================================================================
     //  Для проверки.
-    crc_type calc_crc( const std::string& buf );
+    static crc_type calc_crc( const std::string& buf );
     //===================================================================================
 } // namespace impl
 } // namespace s11n
@@ -131,6 +131,25 @@ namespace impl
         return _crc_str_recurse( str, 0, prev );
     }
     //
+    //===================================================================================
+
+    //===================================================================================
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    static crc_type calc_crc( const std::string& buf )
+    {
+        uint32_t crc = crc_first_val;
+        for ( auto ch: buf )
+        {
+            uint8_t uch  = static_cast<uint8_t>(ch);
+            uint8_t ucrc = static_cast<uint8_t>(crc);
+            uint8_t idx = ucrc ^ uch;
+            crc = (crc >> 8) ^ _poly_04C11DB7_table[idx];
+        }
+        crc ^= crc_last_xor;
+        return crc;
+    }
+    #pragma GCC diagnostic pop
     //===================================================================================
 } // namespace impl
 } // namespace s11n
