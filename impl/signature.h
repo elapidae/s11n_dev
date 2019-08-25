@@ -1,7 +1,7 @@
 #ifndef S11N_IMPL_SIGNATURE_H
 #define S11N_IMPL_SIGNATURE_H
 
-#include "impl/signature_3_serial_tuple.h"
+#include "impl/signature_4_serial_tuple.h"
 
 //=======================================================================================
 //      signature -- сигнатура типа, что-то вроде отпечатка пальца.
@@ -67,19 +67,19 @@ namespace impl
     std::string signature()
     {
         static_assert( test_type<T>(), "");
-        return signature_3<T>();
+        return signature_4<T>();
     }
     //-----------------------------------------------------------------------------------
     template <typename T>
     constexpr crc_type calc_crc_T( crc_type prev )
     {
-        return calc_crc_3<T>( prev );
+        static_assert( test_type<T>(), "");
+        return calc_crc_4<T>( prev );
     }
     //-----------------------------------------------------------------------------------
     template <typename T>
     constexpr crc_type signature_crc()
     {
-        static_assert( test_type<T>(), "");
         return crc_last_xor ^ calc_crc_T<T>( crc_first_val );
     }
     //===================================================================================

@@ -20,8 +20,6 @@ HEADERS += \
     impl/signature.h \
     impl/crc.h \
     impl/signature_1_name_of_type.h \
-    impl/signature_2_description.h \
-    impl/signature_3_serial_tuple.h \
     impl/size.h \
     impl/std_string.h \
     impl/std_void_t.h \
@@ -38,7 +36,10 @@ HEADERS += \
     s11n_size.h \
     s11n_encoder.h \
     s11n_writer.h \
-    impl/encode.h
+    impl/encode.h \
+    impl/signature_4_serial_tuple.h \
+    impl/signature_2_metatype.h \
+    impl/signature_3_description.h
 
 
 VLIBS_DIR = $$PWD/../../vlibs

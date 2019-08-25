@@ -13,8 +13,6 @@ namespace impl
     class Writer
     {
     public:
-        Writer();
-
         template<typename T> typename std::enable_if< std::is_arithmetic<T>::value,
         void>::type write(T val);
 

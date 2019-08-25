@@ -1,7 +1,7 @@
-#ifndef S11N_IMPL_SIGNATURE_2_DESCRIPTION_H
-#define S11N_IMPL_SIGNATURE_2_DESCRIPTION_H
+#ifndef S11N_IMPL_SIGNATURE_3_DESCRIPTION_H
+#define S11N_IMPL_SIGNATURE_3_DESCRIPTION_H
 
-#include "impl/signature_1_name_of_type.h"
+#include "impl/signature_2_metatype.h"
 
 
 //=======================================================================================
@@ -26,7 +26,7 @@ namespace s11n {
 namespace impl
 {
     //===================================================================================
-    //      signature_2 = signature_1 + description
+    //      signature_3 = signature_2 + description
     //===================================================================================
     //      Serial<T>::description deduction
     template<typename T, typename = void>
@@ -52,24 +52,24 @@ namespace impl
     }
     //      Serial<T>::description deduction
     //===================================================================================
-    enum class sign_spec_2
+    enum class sign_spec_3
     {
         with_description,
         without_description
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    constexpr sign_spec_2 sign_spec_2_of()
+    constexpr sign_spec_3 sign_spec_3_of()
     {
-        return  has_serial_description<T>() ? sign_spec_2::with_description
-                                            : sign_spec_2::without_description;
+        return  has_serial_description<T>() ? sign_spec_3::with_description
+                                            : sign_spec_3::without_description;
     }
     //===================================================================================
-    template<typename T, sign_spec_2>
-    struct _signature_2;
+    template<typename T, sign_spec_3>
+    struct _signature_3;
     //===================================================================================
     template<typename T>
-    struct _signature_2<T,sign_spec_2::without_description>
+    struct _signature_3<T,sign_spec_3::without_description>
     {
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
@@ -83,7 +83,7 @@ namespace impl
     };
     //===================================================================================
     template<typename T>
-    struct _signature_2<T,sign_spec_2::with_description>
+    struct _signature_3<T,sign_spec_3::with_description>
     {
         //-------------------------------------------------------------------------------
         static constexpr impl::str_view description()
@@ -118,28 +118,27 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template <typename T>
-    std::string signature_2()
+    std::string signature_3()
     {
-        auto res = signature_1<T>();
-        _signature_2<T,sign_spec_2_of<T>()>::signature( &res );
+        auto res = signature_2<T>();
+        _signature_3<T,sign_spec_3_of<T>()>::signature( &res );
         return res;
     }
     //-----------------------------------------------------------------------------------
     template <typename T>
-    constexpr crc_type calc_crc_2( crc_type prev )
+    constexpr crc_type calc_crc_3( crc_type prev )
     {
         return
-            _signature_2<T,sign_spec_2_of<T>()>::crc
+            _signature_3<T,sign_spec_3_of<T>()>::crc
             (
-                calc_crc_1<T>( prev )
+                calc_crc_2<T>( prev )
             );
     }
     //===================================================================================
-    //      signature_2 = signature_1 + description
+    //      signature_3 = signature_2 + description
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl
 //=======================================================================================
 
 
-#endif // S11N_IMPL_SIGNATURE_2_DESCRIPTION_H
+#endif // S11N_IMPL_SIGNATURE_3_DESCRIPTION_H

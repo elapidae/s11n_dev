@@ -8,6 +8,12 @@
 
 
 //=======================================================================================
+//  signature_1:
+//      if type is arithmetic: using plain name such as uint32
+//      if type has Serial<T>::name_of_type specification: using this spec
+//      if type is tuple: using {T1,T2,...,TN} spec
+//      elsewhere using name of type from __PRETTY_FUNCTION__
+//=======================================================================================
 namespace s11n {
 namespace impl
 {
@@ -78,38 +84,16 @@ namespace impl
     {
         as_plain,
         as_own_name_of_type,
-        as_container,
         as_tuple,
-        as_metatype,
         as_pretty_func
     };
-    //-----------------------------------------------------------------------------------
-    template<typename T> constexpr
-    bool _is_metatype( const T* )
-    {
-        return false;
-    }
-    //-----------------------------------------------------------------------------------
-    template< template<typename...> class MetaT, typename ... Args > constexpr
-    bool _is_metatype( const MetaT<Args...>* )
-    {
-        return true;
-    }
-    //-----------------------------------------------------------------------------------
-    template<typename T> constexpr
-    bool is_metatype()
-    {
-        return _is_metatype( static_cast<T*>(nullptr) );
-    }
     //-----------------------------------------------------------------------------------
     template <typename T> constexpr
     sign_spec_1 sign_spec_1_of()
     {
         return    std::is_arithmetic<T>::value        ? sign_spec_1::as_plain
                 : impl::has_serial_name_of_type<T>()  ? sign_spec_1::as_own_name_of_type
-                : impl::is_container<T>()             ? sign_spec_1::as_container
                 : impl::is_tuple<T>()                 ? sign_spec_1::as_tuple
-                : impl::is_metatype<T>()              ? sign_spec_1::as_metatype
                                                       : sign_spec_1::as_pretty_func;
     }
     //===================================================================================
@@ -196,37 +180,6 @@ namespace impl
     };
     //  as_own_name_of_type
     //===================================================================================
-    //  as_container
-    template <typename T>
-    struct _signature_1<T, impl::sign_spec_1::as_container>
-    {
-        //-------------------------------------------------------------------------------
-        using _vt = typename T::value_type;
-        //-------------------------------------------------------------------------------
-        static constexpr str_view name_of_type()
-        {
-            return name_of_type_from_PF<T,'<'>();
-        }
-        //-------------------------------------------------------------------------------
-        static std::string signature()
-        {
-            return name_of_type().str() + '<' + impl::signature<_vt>() + '>';
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr crc_type crc( crc_type prev )
-        {
-            return calc_crc_ch( '>',
-                        calc_crc_T<_vt>(
-                            calc_crc_ch( '<',
-                                calc_crc_str( name_of_type(), prev )
-                            )
-                        )
-                    );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //  as_container
-    //===================================================================================
     //  as_tuple
     //-----------------------------------------------------------------------------------
     //  signature_tuple
@@ -309,104 +262,6 @@ namespace impl
         //-------------------------------------------------------------------------------
     };
     //  as_tuple
-    //===================================================================================
-    //  as_metatype
-    //-----------------------------------------------------------------------------------
-    //  signature of args
-    template< typename ... Args >
-    struct _signature_metaargs;
-    //-----------------------------------------------------------------------------------
-    template< typename T1, typename ... Args >
-    struct _signature_metaargs<T1,Args...>
-    {
-        //-------------------------------------------------------------------------------
-        constexpr static char delimiter() { return ','; }
-        //-------------------------------------------------------------------------------
-        static std::string signature(bool = false)
-        {
-            return impl::signature<T1>() +
-                   _signature_metaargs<Args...>::delimiter() +
-                   _signature_metaargs<Args...>::signature(true);
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr uint32_t crc( uint32_t prev, bool = false)
-        {
-            return
-                _signature_metaargs<Args...>::crc
-                (
-                    calc_crc_ch
-                    (
-                        _signature_metaargs<Args...>::delimiter(),
-                        calc_crc_T<T1>( prev )
-                    ),
-                    true
-                );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //-----------------------------------------------------------------------------------
-    template<>
-    struct _signature_metaargs<>
-    {
-        //-------------------------------------------------------------------------------
-        constexpr static char delimiter() { return '>'; }
-        //-------------------------------------------------------------------------------
-        static std::string signature(bool delim = false)
-        {
-            return delim ? "" : ">";
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr uint32_t crc( uint32_t prev, bool delim = false)
-        {
-            return delim ? prev : calc_crc_ch( '>', prev );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //-----------------------------------------------------------------------------------
-    template< template<typename...> class MetaT, typename ... Args >
-    std::string _signature_args( const MetaT<Args...>* )
-    {
-        return std::string("<") + _signature_metaargs<Args...>::signature();
-    }
-    //-----------------------------------------------------------------------------------
-    template< template<typename...> class MetaT, typename ... Args >
-    constexpr uint32_t _calc_crc_args( const MetaT<Args...>*, uint32_t prev )
-    {
-        using namespace impl;
-        return _signature_metaargs<Args...>::crc
-        (
-            calc_crc_ch( '<', prev )
-        );
-    }
-    //  signature of args
-    //-----------------------------------------------------------------------------------
-    //  _signature_1
-    template <typename T>
-    struct _signature_1<T, impl::sign_spec_1::as_metatype>
-    {
-        //-------------------------------------------------------------------------------
-        static constexpr str_view name_of_type()
-        {
-            return name_of_type_from_PF<T, '<'>();
-        }
-        //-------------------------------------------------------------------------------
-        static std::string signature()
-        {
-            return name_of_type().str() + _signature_args( static_cast<T*>(nullptr) );
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr crc_type crc( crc_type prev )
-        {
-            return
-                _calc_crc_args
-                (
-                    static_cast<T*>(nullptr),
-                    calc_crc_str( name_of_type(), prev )
-                );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //  as_metatype
     //===================================================================================
     //  as_pretty_func
     template <typename T>

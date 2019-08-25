@@ -37,7 +37,7 @@ namespace s11n {
     {
         static constexpr auto name_of_type = "MyAAA";
         static constexpr auto description = "Ok";
-        static std::tuple<int> to_tuple( const AAA& ) { return {42}; }
+        static std::tuple<int> to_tuple( const AAA& ) { return make_tuple(42); }
         //static int to_tuple( const AAA& ) { return {42}; }
     };
     template<>
