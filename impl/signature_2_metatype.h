@@ -1,5 +1,5 @@
-#ifndef SIGNATURE_2_METATYPE_H
-#define SIGNATURE_2_METATYPE_H
+#ifndef SIGNATURE_2_METAARGS_H
+#define SIGNATURE_2_METAARGS_H
 
 
 #include "impl/signature_1_name_of_type.h"
@@ -72,11 +72,9 @@ namespace impl
         //-------------------------------------------------------------------------------
         using _vt = typename T::value_type;
         //-------------------------------------------------------------------------------
-        static void signature( std::string * res )
+        static std::string sign()
         {
-            res->push_back( '<' );
-            res->append( impl::signature<_vt>() );
-            res->push_back( '>' );
+            return std::string("<") + impl::signature<_vt>() + ">";
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
@@ -103,11 +101,14 @@ namespace impl
         //-------------------------------------------------------------------------------
         constexpr static char delimiter() { return ','; }
         //-------------------------------------------------------------------------------
-        static std::string signature(bool = false)
+        static std::string sign( bool first = true )
         {
-            return impl::signature<T1>() +
-                   _signature_metaargs<Args...>::delimiter() +
-                   _signature_metaargs<Args...>::signature(true);
+            std::string res;
+            if (!first)
+                res.push_back( ',' );
+
+            res.append( impl::signature<T1>() );
+            return res + _signature_metaargs<Args...>::sign( false );
         }
         //-------------------------------------------------------------------------------
         static constexpr uint32_t crc( uint32_t prev, bool = false)
@@ -132,9 +133,10 @@ namespace impl
         //-------------------------------------------------------------------------------
         constexpr static char delimiter() { return '>'; }
         //-------------------------------------------------------------------------------
-        static std::string signature(bool delim = false)
+        static std::string sign( bool first = true )
         {
-            return delim ? "" : ">";
+            (void) first;
+            return ">";
         }
         //-------------------------------------------------------------------------------
         static constexpr uint32_t crc( uint32_t prev, bool delim = false)
@@ -147,7 +149,7 @@ namespace impl
     template< template<typename...> class MetaT, typename ... Args >
     std::string _signature_args( const MetaT<Args...>* )
     {
-        return std::string("<") + _signature_metaargs<Args...>::signature();
+        return std::string("<") + _signature_metaargs<Args...>::sign();
     }
     //-----------------------------------------------------------------------------------
     template< template<typename...> class MetaT, typename ... Args >
@@ -162,7 +164,7 @@ namespace impl
     struct _signature_2<T, impl::sign_spec_2::as_any_metatype>
     {
         //-------------------------------------------------------------------------------
-        static std::string signature()
+        static std::string sign()
         {
             return _signature_args( static_cast<T*>(nullptr) );
         }
@@ -181,7 +183,7 @@ namespace impl
     struct _signature_2<T, impl::sign_spec_2::without_metatype>
     {
         //-------------------------------------------------------------------------------
-        static std::string signature()
+        static std::string sign()
         {
             return {};
         }
@@ -197,14 +199,17 @@ namespace impl
     template <typename T>
     std::string signature_2()
     {
-        auto res = signature_1<T>();
-        _signature_2<T,sign_spec_2_of<T>()>::signature();
+        return signature_1<T>() +
+              _signature_2<T,sign_spec_2_of<T>()>::sign();
     }
     //-----------------------------------------------------------------------------------
     template <typename T>
     constexpr crc_type calc_crc_2( crc_type prev )
     {
-        return _signature_2<T,sign_spec_2_of<T>()>::crc( prev );
+        return _signature_2<T,sign_spec_2_of<T>()>::crc
+               (
+                    calc_crc_1<T>( prev )
+               );
     }
     //===================================================================================
     //      signature_2
@@ -212,4 +217,4 @@ namespace impl
 }} // namespace s11n::impl
 //=======================================================================================
 
-#endif // SIGNATURE_2_METATYPE_H
+#endif // SIGNATURE_2_METAARGS_H

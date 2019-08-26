@@ -54,8 +54,10 @@ namespace impl
             return prev;
         }
         //-------------------------------------------------------------------------------
-        static void signature( std::string * )
-        {}
+        static std::string sign()
+        {
+            return {};
+        }
         //-------------------------------------------------------------------------------
     };
     //-----------------------------------------------------------------------------------
@@ -70,9 +72,9 @@ namespace impl
             return calc_crc_T<Tup>( prev );
         }
         //-------------------------------------------------------------------------------
-        static void signature( std::string *res )
+        static std::string sign()
         {
-            res->append( impl::signature<Tup>() );
+            return impl::signature<Tup>();
         }
         //-------------------------------------------------------------------------------
     };
@@ -80,9 +82,8 @@ namespace impl
     template <typename T>
     std::string signature_4()
     {
-        auto res = signature_3<T>();
-        _signature_4<T,sign_spec_4_of<T>()>::signature( &res );
-        return res;
+        return signature_3<T>() +
+              _signature_4<T,sign_spec_4_of<T>()>::sign();
     }
     //-----------------------------------------------------------------------------------
     template <typename T>

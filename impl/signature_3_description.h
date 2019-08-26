@@ -10,10 +10,10 @@ namespace impl
 {
     //===================================================================================
     template <typename T>
-    std::string signature_2();
+    std::string signature_3();
     //===================================================================================
     template <typename T>
-    constexpr crc_type calc_crc_2( crc_type prev );
+    constexpr crc_type calc_crc_3( crc_type prev );
     //===================================================================================
 }}
 //=======================================================================================
@@ -77,8 +77,10 @@ namespace impl
             return prev;
         }
         //-------------------------------------------------------------------------------
-        static void signature( std::string * )
-        {}
+        static std::string sign()
+        {
+            return {};
+        }
         //-------------------------------------------------------------------------------
     };
     //===================================================================================
@@ -108,11 +110,9 @@ namespace impl
                     );
         }
         //-------------------------------------------------------------------------------
-        static void signature( std::string * res )
+        static std::string sign()
         {
-            res->push_back( '(' );
-            res->append( description() );
-            res->push_back( ')' );
+            return std::string("(") + description().str() + ')';
         }
         //-------------------------------------------------------------------------------
     };
@@ -120,9 +120,8 @@ namespace impl
     template <typename T>
     std::string signature_3()
     {
-        auto res = signature_2<T>();
-        _signature_3<T,sign_spec_3_of<T>()>::signature( &res );
-        return res;
+        return signature_2<T>() +
+              _signature_3<T,sign_spec_3_of<T>()>::sign();
     }
     //-----------------------------------------------------------------------------------
     template <typename T>

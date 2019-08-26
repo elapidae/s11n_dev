@@ -134,7 +134,7 @@ namespace impl
                                                    impl::str_view{"", 0};
         }
         //-------------------------------------------------------------------------------
-        static std::string signature()
+        static std::string sign()
         {
             static_assert( name_of_type().len > 0,
                            "Error during depending of arithmetic type" );
@@ -167,7 +167,7 @@ namespace impl
             };
         }
         //-------------------------------------------------------------------------------
-        static std::string signature()
+        static std::string sign()
         {
             return name_of_type();
         }
@@ -187,16 +187,16 @@ namespace impl
     struct _signature_tuple
     {
         //-------------------------------------------------------------------------------
-        static void signature( std::string * res )
+        static std::string sign()
         {
             using t = tuple_element<Tup,idx>;
-            res->append( impl::signature<t>() );
+            auto res = impl::signature<t>();
 
             constexpr auto next_idx = tuple_next_idx<idx,Tup>();
             if (next_idx > 0)
-                res->push_back(',');
+                res.push_back(',');
 
-            _signature_tuple<next_idx,Tup>::signature( res );
+            return res + _signature_tuple<next_idx,Tup>::sign();
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
@@ -221,9 +221,9 @@ namespace impl
     struct _signature_tuple<-1,Tup>
     {
         //-------------------------------------------------------------------------------
-        static void signature( std::string * res )
+        static std::string sign()
         {
-            res->push_back( '}' );
+            return "}";
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
@@ -240,15 +240,10 @@ namespace impl
     struct _signature_1<T, impl::sign_spec_1::as_tuple>
     {
         //-------------------------------------------------------------------------------
-        static std::string signature()
+        static std::string sign()
         {
-            std::string res;
-            res.push_back( '{' );
-
             constexpr auto idx = tuple_start_idx<T>();
-            _signature_tuple<idx,T>::signature( &res );
-
-            return res;
+            return "{" + _signature_tuple<idx,T>::sign();
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
@@ -273,7 +268,7 @@ namespace impl
             return name_of_type_from_PF<T>();
         }
         //-------------------------------------------------------------------------------
-        static std::string signature()
+        static std::string sign()
         {
             return name_of_type();
         }
@@ -289,7 +284,7 @@ namespace impl
     template <typename T>
     std::string signature_1()
     {
-        return _signature_1<T,sign_spec_1_of<T>()>::signature();
+        return _signature_1<T,sign_spec_1_of<T>()>::sign();
     }
     //-----------------------------------------------------------------------------------
     template <typename T>

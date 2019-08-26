@@ -92,10 +92,16 @@ void prn()
 }
 
 //template<typename R, typename ...Ts>
-
+#include "impl/signature_metatype.h"
 
 int main()
 {
+    vdeb << impl::signature_metaargs( TTT<>() );
+
+    vdeb << impl::is_metatype<A>();
+    vdeb << signature<int>();
+    vdeb << signature<A>();
+
     A a{0x31, true, 0x12345678};
 
     using TIII = tuple <int,int,int>;
