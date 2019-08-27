@@ -3,6 +3,7 @@
 
 
 #include "impl/signature_1_name_of_type.h"
+#include "impl/metaargs_helper.h"
 
 //=======================================================================================
 namespace s11n {
@@ -91,6 +92,7 @@ namespace impl
     //===================================================================================
     //  as_any_metatype
     //-----------------------------------------------------------------------------------
+    /*
     //  signature of args
     template< typename ... Args >
     struct _signature_metaargs;
@@ -159,6 +161,7 @@ namespace impl
     }
     //  signature of args
     //-----------------------------------------------------------------------------------
+    */
     //  _signature_2
     template <typename T>
     struct _signature_2<T, impl::sign_spec_2::as_any_metatype>
@@ -166,13 +169,13 @@ namespace impl
         //-------------------------------------------------------------------------------
         static std::string sign()
         {
-            return _signature_args( static_cast<T*>(nullptr) );
+            return signature_metaargs( static_cast<T*>(nullptr) );
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
         {
             return
-                _calc_crc_args( static_cast<T*>(nullptr), prev );
+                calc_crc_args( static_cast<T*>(nullptr), prev );
         }
         //-------------------------------------------------------------------------------
     };

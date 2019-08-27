@@ -5,7 +5,6 @@ CONFIG -= qt
 
 SOURCES += \
  #   impl/zz_reader.cpp \
-    impl/zz_signature_metaargs.cpp \
         main.cpp \
  #   s11n_decoder.cpp \
   #  s11n_reader.cpp \
@@ -17,11 +16,11 @@ HEADERS += \
     impl/container_helper.h \
     impl/decode.h \
     impl/endian.h \
+    impl/metaargs_helper.h \
     impl/reader.h \
     impl/signature.h \
     impl/crc.h \
     impl/signature_1_name_of_type.h \
-    impl/signature_metaargs.h \
     impl/size.h \
     impl/std_string.h \
     impl/std_void_t.h \

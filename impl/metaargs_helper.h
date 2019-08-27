@@ -1,5 +1,5 @@
-#ifndef SIGNATURE_METAARGS_H
-#define SIGNATURE_METAARGS_H
+#ifndef METAARGS_HELPER_H
+#define METAARGS_HELPER_H
 
 #include "impl/crc.h"
 
@@ -96,4 +96,4 @@ namespace impl
 }} // namespace s11n::impl
 //=======================================================================================
 
-#endif // SIGNATURE_METAARGS_H
+#endif // METAARGS_HELPER_H

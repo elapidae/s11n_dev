@@ -12,7 +12,7 @@
 
 
 #include "s11n.h"
-
+#include "impl/metaargs_helper.h"
 
 template <typename> class TD;
 
@@ -92,11 +92,12 @@ void prn()
 }
 
 //template<typename R, typename ...Ts>
-#include "impl/signature_metatype.h"
+#include "impl/metaargs_helper.h"
 
 int main()
 {
-    vdeb << impl::signature_metaargs( TTT<>() );
+    TTT<> t0;
+    vdeb << impl::signature_metaargs( &t0 );
 
     vdeb << impl::is_metatype<A>();
     vdeb << signature<int>();
