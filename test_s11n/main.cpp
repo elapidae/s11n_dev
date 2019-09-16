@@ -83,7 +83,8 @@ TEST_F( Test_s11n, name_of_metatypes )
 //=======================================================================================
 TEST_F( Test_s11n, name_of_containers )
 {
-    EXPECT_EQ( signature< string >(), "std::string" );
+    static_assert ( is_same<std::string::value_type,char>::value, "" );
+    EXPECT_EQ( signature< string >(), "std::string<char>" );
 
     EXPECT_EQ( signature< vector<bool>          >(), "std::vector<bool>"        );
     EXPECT_EQ( signature< deque<bool>           >(), "std::deque<bool>"         );
@@ -98,8 +99,8 @@ TEST_F( Test_s11n, name_of_containers )
     using UMT = unordered_map<int8_t,bool>;
 
     EXPECT_EQ( signature< AT  >(), "std::array<bool>"                );
-    //EXPECT_EQ( signature< MT  >(), "std::map<{int8,bool}>"           );
-    //EXPECT_EQ( signature< UMT >(), "std::unordered_map<{int8,bool}>" );
+    EXPECT_EQ( signature< MT  >(), "std::map<{int8,bool}>"           );
+    EXPECT_EQ( signature< UMT >(), "std::unordered_map<{int8,bool}>" );
 
     // TODO: Надо думать как сделать частичную перегрузку для шаблонных типов.
     // Надо чтобы можно было перегрузить Serial для имени типа, но оставить в покое
@@ -138,8 +139,8 @@ TEST_F( Test_s11n, crcs_of_containers )
     EXPECT_EQ( signature_crc< S  >(), own_crc< S  >() );
     EXPECT_EQ( signature_crc< US >(), own_crc< US >() );
     EXPECT_EQ( signature_crc< A  >(), own_crc< A  >() );
-    //EXPECT_EQ( signature_crc< M  >(), own_crc< M  >() );
-    //EXPECT_EQ( signature_crc< UM >(), own_crc< UM >() );
+    EXPECT_EQ( signature_crc< M  >(), own_crc< M  >() );
+    EXPECT_EQ( signature_crc< UM >(), own_crc< UM >() );
 }
 //=======================================================================================
 
@@ -248,9 +249,12 @@ TEST_F( Test_s11n, some_random_signature )
     using S = set<char>;
     using T4 = tuple<T,V,T2,C,UM,T3,S>;
 
-//    vdeb <<hex  << endl << endl << endl
-//          << signature<T4>()
-//          << endl << endl << endl << endl;
+
+    EXPECT_EQ( signature<T>(),  "{int16,char,bool}" );
+    EXPECT_EQ( signature<V>(),  "std::vector<{int16,char,bool}>" );
+    EXPECT_EQ( signature<T2>(), "{{int16,char,bool},std::vector<"
+                                 "{int16,char,bool}>,test_ns::OwnType}" );
+
 
     auto sign = "{{int16,char,bool},std::vector<{int16,char,bool}>,"
                 "{{int16,char,bool},std::vector<{int16,char,bool}>,"
@@ -265,11 +269,11 @@ TEST_F( Test_s11n, some_random_signature )
                 "std::map<{int32,{{int16,char,bool},"
                 "std::vector<{int16,char,bool}>,test_ns::OwnType}}>}>},std::set<char>}";
 
-    //EXPECT_EQ( signature<T4>(), sign );
-    //EXPECT_EQ( signature_crc<T4>(), calc_crc(sign) );
+    EXPECT_EQ( signature<T4>(), sign );
+    EXPECT_EQ( signature_crc<T4>(), calc_crc(sign) );
 
     //  Checked with online calculator.
-    //EXPECT_EQ( signature_crc<T4>(), 0x89EA5EEC );
+    EXPECT_EQ( signature_crc<T4>(), 0x89EA5EEC );
 }
 //=======================================================================================
 

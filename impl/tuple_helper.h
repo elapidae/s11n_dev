@@ -78,18 +78,35 @@ namespace impl
     //===================================================================================
     //      is_tuple<T>() use as marker with signatures.
     //
+    //-----------------------------------------------------------------------------------
+    template<typename T> constexpr
+    bool _is_array( const T* )
+    {
+        return false;
+    }
+    //-----------------------------------------------------------------------------------
+    template<typename T, size_t sz> constexpr
+    bool _is_array( const std::array<T,sz>* )
+    {
+        return true;
+    }
+    //-----------------------------------------------------------------------------------
     template<typename T, typename = void>
     struct _has_tuple_size
         : std::false_type
     {};
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _has_tuple_size< T, std::void_t<decltype(std::tuple_size<T>::value)> >
+    struct _has_tuple_size< T, std::void_t< decltype(std::tuple_size<T>::value) >>
         : std::true_type
     {};
     //-----------------------------------------------------------------------------------
     template<typename T> constexpr
-    bool is_tuple() { return _has_tuple_size<T>::value; }
+    bool is_tuple()
+    {
+        return _has_tuple_size<T>::value &&
+               !_is_array( static_cast<const T*>(nullptr) );
+    }
     //===================================================================================
 
 
