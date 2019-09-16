@@ -12,7 +12,7 @@
 
 
 #include "s11n.h"
-#include "impl/metaargs_helper.h"
+//#include "impl/metaargs_helper.h"
 
 template <typename> class TD;
 
@@ -92,29 +92,34 @@ void prn()
 }
 
 //template<typename R, typename ...Ts>
-#include "impl/metaargs_helper.h"
+//#include "impl/metaargs_helper.h"
 
 int main()
 {
-    TTT<> t0;
-    vdeb << impl::signature_metaargs( &t0 );
+      using TIII = tuple <int,int,int>;
+    vdeb << signature<TIII>();
+    vdeb << calc_crc(signature<TIII>());
+    vdeb << signature_crc<TIII>();
 
-    vdeb << impl::is_metatype<A>();
-    vdeb << signature<int>();
-    vdeb << signature<A>();
+    using VTIII = vector<TIII>;
+    vdeb << signature<VTIII>();
+    vdeb << calc_crc(signature<VTIII>());
+    vdeb << signature_crc<VTIII>();
 
-    A a{0x31, true, 0x12345678};
+    vdeb << signature<PointF>();
+    vdeb << calc_crc(signature<PointF>());
+    vdeb << signature_crc<PointF>();
 
-    using TIII = tuple <int,int,int>;
 
-    TIII t1{1,2,3};
+    return 0;
+//    TIII t1{1,2,3};
 
-    vdeb << VString(encode(a)).to_Hex();
+//    vdeb << VString(encode(a)).to_Hex();
 
-    auto str = encode(t1);
-    vdeb << VString( str ).to_Hex();
-    auto dt1 = decode<decltype(t1)>( str );
-    vdeb << get<0>(dt1) << get<1>(dt1) << get<2>(dt1);
+//    auto str = encode(t1);
+//    vdeb << VString( str ).to_Hex();
+//    auto dt1 = decode<decltype(t1)>( str );
+//    vdeb << get<0>(dt1) << get<1>(dt1) << get<2>(dt1);
 
     //TD<decltype(i)> ddd;
     //vdeb << signature<TTT<decltype(i)>>();

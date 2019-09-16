@@ -70,15 +70,15 @@ namespace impl
         return signature_4<T>();
     }
     //-----------------------------------------------------------------------------------
-    template <typename T>
-    constexpr crc_type calc_crc_T( crc_type prev )
+    template <typename T> constexpr
+    crc_type calc_crc_T( crc_type prev )
     {
         static_assert( test_type<T>(), "");
         return calc_crc_4<T>( prev );
     }
     //-----------------------------------------------------------------------------------
-    template <typename T>
-    constexpr crc_type signature_crc()
+    template <typename T> constexpr
+    crc_type signature_crc()
     {
         return crc_last_xor ^ calc_crc_T<T>( crc_first_val );
     }

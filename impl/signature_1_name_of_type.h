@@ -5,6 +5,7 @@
 #include "impl/name_of_type_from_pf.h"
 #include "impl/tuple_helper.h"
 #include "impl/container_helper.h"
+#include "impl/metaargs_helper.h"
 
 
 //=======================================================================================
@@ -32,6 +33,8 @@ namespace impl
 //=======================================================================================
 //      Implementation
 //=======================================================================================
+namespace s11n { template <typename T> struct Serial; }
+//===================================================================================
 namespace s11n {
 namespace impl
 {
@@ -162,8 +165,8 @@ namespace impl
         {
             return
             {
-                Serial<T>::name_of_type,
-                str_length( Serial<T>::name_of_type )
+                ::s11n::Serial<T>::name_of_type,
+                str_length( ::s11n::Serial<T>::name_of_type )
             };
         }
         //-------------------------------------------------------------------------------
@@ -181,78 +184,24 @@ namespace impl
     //  as_own_name_of_type
     //===================================================================================
     //  as_tuple
-    //-----------------------------------------------------------------------------------
-    //  signature_tuple
-    template <int idx, typename Tup>
-    struct _signature_tuple
-    {
-        //-------------------------------------------------------------------------------
-        static std::string sign()
-        {
-            using t = tuple_element<Tup,idx>;
-            auto res = impl::signature<t>();
-
-            constexpr auto next_idx = tuple_next_idx<idx,Tup>();
-            if (next_idx > 0)
-                res.push_back(',');
-
-            return res + _signature_tuple<next_idx,Tup>::sign();
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr crc_type crc( crc_type prev )
-        {
-            using t = tuple_element<Tup,idx>;
-            using next = _signature_tuple<tuple_next_idx<idx,Tup>(),Tup>;
-
-            return
-                next::crc
-                (
-                    calc_crc_ch
-                    (
-                        tuple_next_idx<idx,Tup>() > 0 ? ',' : '}',
-                        calc_crc_T<t>( prev )
-                    )
-                );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //-----------------------------------------------------------------------------------
-    template <typename Tup>
-    struct _signature_tuple<-1,Tup>
-    {
-        //-------------------------------------------------------------------------------
-        static std::string sign()
-        {
-            return "}";
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr crc_type crc( crc_type prev )
-        {
-            return tuple_size<Tup>() != 0 ? prev
-                                          : calc_crc_ch( '}', prev );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //  signature_tuple
-    //===================================================================================
-    //  signature_1
     template <typename T>
     struct _signature_1<T, impl::sign_spec_1::as_tuple>
     {
         //-------------------------------------------------------------------------------
         static std::string sign()
         {
-            constexpr auto idx = tuple_start_idx<T>();
-            return "{" + _signature_tuple<idx,T>::sign();
+            return std::string("{") +
+                   signature_metaargs(static_cast<T*>(nullptr)) +
+                   std::string("}");
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
         {
-            return
-                _signature_tuple<tuple_start_idx<T>(),T>::crc
-                (
-                    calc_crc_ch( '{', prev )
-                );
+            return  calc_crc_ch( '}',
+                        calc_crc_metaargs(static_cast<T*>(nullptr),
+                            calc_crc_ch( '{', prev )
+                        )
+                    );
         }
         //-------------------------------------------------------------------------------
     };

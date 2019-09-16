@@ -27,8 +27,8 @@ namespace impl
     template<typename T>
     std::string signature();
     //===================================================================================
-    template<typename T>
-    crc_type calc_crc_T();
+    template<typename T> constexpr
+    crc_type calc_crc_T( crc_type prev );
     //===================================================================================
 
 
@@ -43,7 +43,7 @@ namespace impl
         //-------------------------------------------------------------------------------
         static std::string sign( bool first = true )
         {
-            return first ? "" : "," +
+            return std::string(first ? "" : ",") +
                    impl::signature<T1>() +
                    _signature_metaargs<Args...>::sign( false );
         }

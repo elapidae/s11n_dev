@@ -42,8 +42,10 @@ if ( NOT  S11N_INCLUDED )
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/size.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/encode.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/decode.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_string.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_list.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n.h")
 

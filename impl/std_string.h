@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <s11n_size.h>
+#include "impl/size.h"
 //#include <s11n_decoder.h>
 //#include <s11n_encoder.h>
 
@@ -17,7 +17,7 @@ namespace s11n
     class AbstractDecoder;
 
     template<>
-    struct Serial<std::string>
+    struct Serial< std::string >
     {
         static constexpr auto name_of_type = "std::string";
 

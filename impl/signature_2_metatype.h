@@ -33,6 +33,7 @@ namespace impl
     enum class sign_spec_2
     {
         without_metatype,
+        as_tuple,
         as_container,
         as_any_metatype,
     };
@@ -58,13 +59,32 @@ namespace impl
     template <typename T> constexpr
     sign_spec_2 sign_spec_2_of()
     {
-        return is_container<T>()        ? sign_spec_2::as_container
-            : impl::is_metatype<T>()    ? sign_spec_2::as_any_metatype
-                                        : sign_spec_2::without_metatype;
+        return is_tuple<T>()          ? sign_spec_2::as_tuple
+            : impl::is_container<T>() ? sign_spec_2::as_container
+            : impl::is_metatype<T>()  ? sign_spec_2::as_any_metatype
+                                      : sign_spec_2::without_metatype;
     }
     //===================================================================================
     template <typename T, impl::sign_spec_2>
     struct _signature_2;
+    //===================================================================================
+    //  as_tuple
+    template <typename T>
+    struct _signature_2<T, impl::sign_spec_2::as_tuple>
+    {
+        //-------------------------------------------------------------------------------
+        static std::string sign()
+        {
+            return {};
+        }
+        //-------------------------------------------------------------------------------
+        static constexpr crc_type crc( crc_type prev )
+        {
+            return prev;
+        }
+        //-------------------------------------------------------------------------------
+    };
+    //  as_tuple
     //===================================================================================
     //  as_container
     template <typename T>
@@ -75,7 +95,9 @@ namespace impl
         //-------------------------------------------------------------------------------
         static std::string sign()
         {
-            return std::string("<") + impl::signature<_vt>() + ">";
+            return std::string("<") +
+                   impl::signature<_vt>() +
+                   std::string(">");
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
@@ -92,76 +114,6 @@ namespace impl
     //===================================================================================
     //  as_any_metatype
     //-----------------------------------------------------------------------------------
-    /*
-    //  signature of args
-    template< typename ... Args >
-    struct _signature_metaargs;
-    //-----------------------------------------------------------------------------------
-    template< typename T1, typename ... Args >
-    struct _signature_metaargs<T1,Args...>
-    {
-        //-------------------------------------------------------------------------------
-        constexpr static char delimiter() { return ','; }
-        //-------------------------------------------------------------------------------
-        static std::string sign( bool first = true )
-        {
-            std::string res;
-            if (!first)
-                res.push_back( ',' );
-
-            res.append( impl::signature<T1>() );
-            return res + _signature_metaargs<Args...>::sign( false );
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr uint32_t crc( uint32_t prev, bool = false)
-        {
-            return
-                _signature_metaargs<Args...>::crc
-                (
-                    calc_crc_ch
-                    (
-                        _signature_metaargs<Args...>::delimiter(),
-                        calc_crc_T<T1>( prev )
-                    ),
-                    true
-                );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //-----------------------------------------------------------------------------------
-    template<>
-    struct _signature_metaargs<>
-    {
-        //-------------------------------------------------------------------------------
-        constexpr static char delimiter() { return '>'; }
-        //-------------------------------------------------------------------------------
-        static std::string sign( bool first = true )
-        {
-            (void) first;
-            return ">";
-        }
-        //-------------------------------------------------------------------------------
-        static constexpr uint32_t crc( uint32_t prev, bool delim = false)
-        {
-            return delim ? prev : calc_crc_ch( '>', prev );
-        }
-        //-------------------------------------------------------------------------------
-    };
-    //-----------------------------------------------------------------------------------
-    template< template<typename...> class MetaT, typename ... Args >
-    std::string _signature_args( const MetaT<Args...>* )
-    {
-        return std::string("<") + _signature_metaargs<Args...>::sign();
-    }
-    //-----------------------------------------------------------------------------------
-    template< template<typename...> class MetaT, typename ... Args >
-    constexpr uint32_t _calc_crc_args( const MetaT<Args...>*, uint32_t prev )
-    {
-        return _signature_metaargs<Args...>::crc( calc_crc_ch('<', prev) );
-    }
-    //  signature of args
-    //-----------------------------------------------------------------------------------
-    */
     //  _signature_2
     template <typename T>
     struct _signature_2<T, impl::sign_spec_2::as_any_metatype>
@@ -169,13 +121,18 @@ namespace impl
         //-------------------------------------------------------------------------------
         static std::string sign()
         {
-            return signature_metaargs( static_cast<T*>(nullptr) );
+            return std::string("<") +
+                   signature_metaargs( static_cast<T*>(nullptr) ) +
+                   std::string(">");
         }
         //-------------------------------------------------------------------------------
         static constexpr crc_type crc( crc_type prev )
         {
-            return
-                calc_crc_args( static_cast<T*>(nullptr), prev );
+            return  calc_crc_ch( '>',
+                        calc_crc_metaargs(static_cast<T*>(nullptr),
+                            calc_crc_ch( '<', prev )
+                        )
+                    );
         }
         //-------------------------------------------------------------------------------
     };

@@ -18,7 +18,8 @@ include( "${S11N_DIR}/s11n.cmake" )
 set( HEADERS ${HEADERS} ${S11N_HEADERS} )
 set( SOURCES ${SOURCES} ${S11N_SOURCES} )
 
-add_executable( ${PROJECT_NAME} "main.cpp" ${HEADERS} ${SOURCES} )
+add_executable( ${PROJECT_NAME} "main.cpp" ${HEADERS} ${SOURCES}
+                test_signature.h )
 
 
 target_link_libraries( ${PROJECT_NAME}

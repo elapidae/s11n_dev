@@ -1,14 +1,20 @@
 #ifndef S11N_H
 #define S11N_H
 
-#include "impl/signature.h"
 #include "impl/std_string.h"
+#include "impl/std_list.h"
+
+#include "impl/signature.h"
+
 #include "impl/encode.h"
 #include "impl/decode.h"
+
 
 //=======================================================================================
 namespace s11n
 {
+    //===================================================================================
+    template<typename T> struct Serial;    
     //===================================================================================
     template<typename T>
     std::string signature()
