@@ -3,8 +3,9 @@
 #include <string>
 
 #include "impl/size.h"
-//#include <s11n_decoder.h>
-//#include <s11n_encoder.h>
+#include <impl/encode.h>
+#include <impl/decode.h>
+#include <impl/size.h>
 
 //=======================================================================================
 //  По умолчанию перегружен Serial<std::string>, иначе выведется истинный тип строки:
@@ -13,25 +14,25 @@
 namespace s11n
 {
     template<typename> struct Serial;
-    class Encoder;
-    class AbstractDecoder;
 
     template<>
     struct Serial< std::string >
     {
         static constexpr auto name_of_type = "std::string";
 
-//        static void write( const std::string& str, Writer* writer )
-//        {
-//            s11n::Encoder::encode( s11n::Size(str.size()), writer );
-//            writer->write_str( str );
-//        }
+        static void write( const std::string& str, impl::Writer* writer )
+        {
+            using namespace s11n::impl;
+            encode( Size(str.size()), writer );
+            writer->write_str( str );
+        }
 
-//        static std::string read( Reader* reader )
-//        {
-//            auto size = AbstractDecoder::decode<s11n::Size>( reader );
-//            return reader->read_str( size );
-//        }
-    };
-};
+        static std::string read( impl::Reader* reader )
+        {
+            using namespace s11n::impl;
+            auto size = decode<Size>( reader );
+            return reader->read_str( size );
+        }
+    }; // Serial< std::string >
+} // s11n namespace
 //=======================================================================================

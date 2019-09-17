@@ -41,6 +41,10 @@ if ( NOT  S11N_INCLUDED )
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/size.h")
+
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/reader.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/writer.h")
+
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/encode.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/decode.h")
 
@@ -48,9 +52,6 @@ if ( NOT  S11N_INCLUDED )
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_list.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n.h")
-
-    #set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n_.h")
-    #set(S11N_SOURCES ${S11N_SOURCES} "${S11N_DIR}/s11n_.cpp")
 
 
     message( " === s11n included === " )

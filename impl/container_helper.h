@@ -14,8 +14,19 @@ namespace impl
     template<typename C> constexpr
     bool is_container();
     //===================================================================================
+    template<typename C> constexpr
+    bool is_map_set();
+    //===================================================================================
+    //template<typename Cont, typename Value>
+    //void container_append( Cont* c, Value && val );
+
     template<typename Cont, typename Value>
-    void container_append( Cont* c, Value && val );
+    typename std::enable_if<!is_map_set<Cont>(), void>::type
+    container_append( Cont* c, Value && val );
+    //-----------------------------------------------------------------------------------
+    template<typename Cont, typename Value>
+    typename std::enable_if<is_map_set<Cont>(), void>::type
+    container_append( Cont* c, Value && val );
     //===================================================================================
 } // namespace impl
 } // namespace s11n
@@ -55,12 +66,49 @@ namespace impl
         return _is_container<C>::value;
     }
     //===================================================================================
+
+    //===================================================================================
+    template<typename C, typename = void>
+    struct _is_map_set
+        : public std::false_type
+    {};
+    //-----------------------------------------------------------------------------------
+    template<typename C>
+    struct _is_map_set
+    <
+        C,
+        std::void_t
+        <
+            typename C::value_type,
+            typename C::key_type
+            //decltype( C::insert )
+        >
+    >
+        : public std::true_type
+    {};
+    //-----------------------------------------------------------------------------------
+    template<typename C> constexpr
+    bool is_map_set()
+    {
+        return _is_map_set<C>::value;
+    }
+    //===================================================================================
+
+    //===================================================================================
     //  Когда дойдут руки для десериализации set-ов и map-ов, надо будет припилить через
     //  emplace()
     template<typename Cont, typename Value>
-    void container_append( Cont* c, Value && val )
+    typename std::enable_if<!is_map_set<Cont>(), void>::type
+    container_append( Cont* c, Value && val )
     {
         c->push_back( std::forward<Value>(val) );
+    }
+    //===================================================================================
+    template<typename Cont, typename Value>
+    typename std::enable_if<is_map_set<Cont>(), void>::type
+    container_append( Cont* c, Value && val )
+    {
+        c->insert( std::forward<Value>(val) );
     }
     //===================================================================================
 } // namespace impl

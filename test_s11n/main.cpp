@@ -20,6 +20,7 @@
 
 #include "test_plains.h"
 #include "test_signature.h"
+#include "test_encoder.h"
 
 using namespace std;
 using namespace s11n;

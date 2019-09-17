@@ -63,7 +63,8 @@ namespace impl
 
             //  Лучше сделать сначала переменную, а не сразу "снимать" с буффера, чтобы
             //  компилятор сам подумал за выравнивание.
-            T res;
+            //  remove_const нужно, если, например, надо выдавливать пары в std::map.
+            typename std::remove_const<T>::type res;
             memcpy( &res, _ptr, sizeof(T) );
 
             _ptr      += sizeof(T);

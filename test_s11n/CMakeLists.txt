@@ -19,7 +19,8 @@ set( HEADERS ${HEADERS} ${S11N_HEADERS} )
 set( SOURCES ${SOURCES} ${S11N_SOURCES} )
 
 add_executable( ${PROJECT_NAME} "main.cpp" ${HEADERS} ${SOURCES}
-                test_signature.h )
+                test_signature.h
+                test_encoder.h )
 
 
 target_link_libraries( ${PROJECT_NAME}

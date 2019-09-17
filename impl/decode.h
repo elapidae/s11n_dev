@@ -88,7 +88,7 @@ namespace impl
         static T read( Reader* reader )
         {
             using Tuple = impl::serial_tuple_type<T>;
-            auto idx = impl::tuple_start_idx<T>();
+            constexpr auto idx = impl::tuple_start_idx<Tuple>();
             return _tuple_reader<idx,Tuple,T>::read( reader );
         }
     };
