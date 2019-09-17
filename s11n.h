@@ -14,7 +14,7 @@
 namespace s11n
 {
     //===================================================================================
-    template<typename T> struct Serial;    
+    template<typename T> struct Serial;
     //===================================================================================
     template<typename T>
     std::string signature()
@@ -28,7 +28,7 @@ namespace s11n
         return impl::signature_crc<T>();
     }
     //===================================================================================
-    using impl::calc_crc;   //( const std::string& );
+    using impl::calc_crc;   //  ( const std::string& );
     using impl::crc_type;
     //===================================================================================
     using impl::encode;     //  std::string encode( const T& val );

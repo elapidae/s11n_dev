@@ -26,13 +26,14 @@ if ( NOT  S11N_INCLUDED )
     message( " === include s11n === ..." )
 
     include_directories( "${S11N_DIR}/")
-    
+
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/str_view.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_void_t.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/crc.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/tuple_helper.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/container_helper.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/name_of_type_from_pf.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/metaargs_helper.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_1_name_of_type.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_2_metatype.h")

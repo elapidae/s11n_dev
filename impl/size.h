@@ -1,5 +1,5 @@
-#ifndef SIZE_H
-#define SIZE_H
+#ifndef S11N_IMPL_SIZE_H
+#define S11N_IMPL_SIZE_H
 
 #include <assert.h>
 #include <limits>
@@ -96,4 +96,4 @@ namespace s11n
 //=======================================================================================
 
 
-#endif // SIZE_H
+#endif // S11N_IMPL_SIZE_H

@@ -17,9 +17,6 @@ namespace impl
     template<typename C> constexpr
     bool is_map_set();
     //===================================================================================
-    //template<typename Cont, typename Value>
-    //void container_append( Cont* c, Value && val );
-
     template<typename Cont, typename Value>
     typename std::enable_if<!is_map_set<Cont>(), void>::type
     container_append( Cont* c, Value && val );
@@ -80,8 +77,12 @@ namespace impl
         std::void_t
         <
             typename C::value_type,
-            typename C::key_type
-            //decltype( C::insert )
+            typename C::key_type,
+            decltype( std::declval<C>().insert
+                        (
+                            *static_cast<typename C::value_type*>(nullptr)
+                        )
+                    )
         >
     >
         : public std::true_type
@@ -95,8 +96,6 @@ namespace impl
     //===================================================================================
 
     //===================================================================================
-    //  Когда дойдут руки для десериализации set-ов и map-ов, надо будет припилить через
-    //  emplace()
     template<typename Cont, typename Value>
     typename std::enable_if<!is_map_set<Cont>(), void>::type
     container_append( Cont* c, Value && val )

@@ -1,7 +1,6 @@
 #ifndef S11N_IMPL_SIGNATURE_4_SERIAL_TUPLE_H
 #define S11N_IMPL_SIGNATURE_4_SERIAL_TUPLE_H
 
-
 #include "impl/signature_3_description.h"
 
 

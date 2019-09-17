@@ -1,5 +1,5 @@
-#ifndef METAARGS_HELPER_H
-#define METAARGS_HELPER_H
+#ifndef S11N_IMPL_METAARGS_HELPER_H
+#define S11N_IMPL_METAARGS_HELPER_H
 
 #include "impl/crc.h"
 
@@ -96,4 +96,4 @@ namespace impl
 }} // namespace s11n::impl
 //=======================================================================================
 
-#endif // METAARGS_HELPER_H
+#endif // S11N_IMPL_METAARGS_HELPER_H

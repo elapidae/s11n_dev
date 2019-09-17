@@ -1,11 +1,12 @@
-#pragma once
+#ifndef S11N_IMPL_STD_STRING_H
+#define S11N_IMPL_STD_STRING_H
 
 #include <string>
 
 #include "impl/size.h"
-#include <impl/encode.h>
-#include <impl/decode.h>
-#include <impl/size.h>
+#include "impl/encode.h"
+#include "impl/decode.h"
+#include "impl/size.h"
 
 //=======================================================================================
 //  По умолчанию перегружен Serial<std::string>, иначе выведется истинный тип строки:
@@ -36,3 +37,5 @@ namespace s11n
     }; // Serial< std::string >
 } // s11n namespace
 //=======================================================================================
+
+#endif // S11N_IMPL_STD_STRING_H

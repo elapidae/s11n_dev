@@ -1,5 +1,5 @@
-#ifndef SIGNATURE_2_METAARGS_H
-#define SIGNATURE_2_METAARGS_H
+#ifndef S11N_IMPL_SIGNATURE_2_METAARGS_H
+#define S11N_IMPL_SIGNATURE_2_METAARGS_H
 
 
 #include "impl/signature_1_name_of_type.h"
@@ -177,4 +177,4 @@ namespace impl
 }} // namespace s11n::impl
 //=======================================================================================
 
-#endif // SIGNATURE_2_METAARGS_H
+#endif // S11N_IMPL_SIGNATURE_2_METAARGS_H

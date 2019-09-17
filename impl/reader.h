@@ -1,19 +1,22 @@
-#ifndef READER_H
-#define READER_H
+#ifndef S11N_IMPL_READER_H
+#define S11N_IMPL_READER_H
 
 #include <string>
 #include <stdexcept>
+#include <string.h> // for memcpy
 #include "impl/endian.h"
 
-
+//=======================================================================================
 namespace s11n {
 namespace impl
 {
+    //===================================================================================
     class Reader
     {
     public:
-
+        //-------------------------------------------------------------------------------
         #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wpragmas"
         #pragma GCC diagnostic ignored "-Wweak-vtables"
 
         class error : public std::runtime_error
@@ -29,19 +32,19 @@ namespace impl
         { public: out_of_size(const std::string& msg) : error(msg) {} };
 
         #pragma GCC diagnostic pop
-
+        //-------------------------------------------------------------------------------
         void throw_if_not_finished()
         {
             if (_remained == 0) return;
             throw buffer_not_finished();
         }
-
+        //-------------------------------------------------------------------------------
         explicit Reader( const std::string& buffer )
             : _buffer   ( buffer          )
             , _ptr      ( _buffer.c_str() )
             , _remained ( _buffer.size()  )
         {}
-
+        //-------------------------------------------------------------------------------
         std::string read_str( size_t sz )
         {
             if ( _remained < sz )
@@ -54,7 +57,7 @@ namespace impl
 
             return res;
         }
-
+        //-------------------------------------------------------------------------------
         template<typename T> typename std::enable_if< std::is_arithmetic<T>::value,
         T>::type read()
         {
@@ -72,14 +75,16 @@ namespace impl
 
             return impl::little_endian( res );
         }
+        //-------------------------------------------------------------------------------
 
     private:
         std::string _buffer;
         const char* _ptr;
         size_t      _remained;
     };
-
+    //===================================================================================
 } // namespace impl
 } // namespace s11n
+//=======================================================================================
 
-#endif // READER_H
+#endif // S11N_IMPL_READER_H

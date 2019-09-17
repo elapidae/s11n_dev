@@ -1,11 +1,10 @@
-#ifndef TEST_ENCODER_H
-#define TEST_ENCODER_H
-
 #include "test_main.h"
 
 using namespace s11n;
 using namespace std;
 
+//=======================================================================================
+//      Hexadecimal helpers
 //=======================================================================================
 static constexpr auto _hex = "0123456789abcdef";
 static std::string to_hex( std::string h )
@@ -59,6 +58,8 @@ static std::string from_hex( const std::string& src )
     return res.erase( 0, res.size() - real_res_size );
 }
 //=======================================================================================
+//      Hexadecimal helpers
+//=======================================================================================
 
 
 //=======================================================================================
@@ -99,13 +100,14 @@ TEST_F( Test_s11n, size_encode )
 
 
 //=======================================================================================
+//  Any class with fields.
 struct Own
 {
-    int32_t a;
-    uint16_t b;
-    char c;
-    bool d;
-    s11n::impl::Size sz;
+    int32_t     a;
+    uint16_t    b;
+    char        c;
+    bool        d;
+    impl::Size  sz;
 
     bool operator == ( const Own& rhs ) const
     {
@@ -120,6 +122,8 @@ struct Own
         return !(*this == rhs);
     }
 };
+//---------------------------------------------------------------------------------------
+//  Deploy Own class to s11n system.
 namespace s11n
 {
     template <typename> struct Serial;
@@ -132,7 +136,7 @@ namespace s11n
         }
     };
 } // s11n
-
+//---------------------------------------------------------------------------------------
 TEST_F( Test_s11n, own_encode )
 {
     Own o{-42, 43, 'c', true, impl::Size{12345u}};
@@ -154,19 +158,32 @@ TEST_F( Test_s11n, container_encode )
     auto l2 = decode<std::list<int>>( str );
     EXPECT_EQ( l, l2 );
 
+    //  All containers encode the same.
+    std::vector<int> lv{1,2,3,4,5,6,7,8,9,10};
+    EXPECT_EQ( lv, decode<decltype(lv)>(str) );
+
+    std::deque<int> ld{1,2,3,4,5,6,7,8,9,10};
+    EXPECT_EQ( ld, decode<decltype(ld)>(str) );
+
+
     std::map<int,int> m;
+    std::unordered_set<int> s;
     for (int i = 0; i < 10000; ++i)
+    {
         m.emplace( rand(), rand() );
+        s.emplace( rand() );
+    }
 
     str = encode( m );
     auto m2 = decode<decltype(m)>( str );
     EXPECT_EQ( m, m2 );
+
+    str = encode( s );
+    auto s2 = decode<decltype(s)>( str );
+    EXPECT_EQ( s, s2 );
 
     vector<string> v{"ololo", "alala", "hello", "", "world!"};
     str = encode(v);
     EXPECT_EQ( v, decode<vector<string>>(str) );
 }
 //=======================================================================================
-
-
-#endif // TEST_ENCODER_H

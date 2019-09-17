@@ -1,4 +1,5 @@
-#pragma once
+#ifndef S11N_IMPL_NAME_OF_TYPE_FROM_PF_H
+#define S11N_IMPL_NAME_OF_TYPE_FROM_PF_H
 
 #include "impl/str_view.h"
 
@@ -86,6 +87,7 @@ namespace impl
         return _advance_along_substr( _sign_T_PRETTY_FUNC<T>(), _sign_T_preambul );
     }
     //===================================================================================
-} // impl
-} // s11n
+}} // namespace s11n::impl
 //=======================================================================================
+
+#endif // S11N_IMPL_NAME_OF_TYPE_FROM_PF_H

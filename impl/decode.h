@@ -1,5 +1,5 @@
-#ifndef DECODE_H
-#define DECODE_H
+#ifndef S11N_IMPL_DECODE_H
+#define S11N_IMPL_DECODE_H
 
 #include "impl/reader.h"
 #include "impl/type_spec.h"
@@ -145,5 +145,4 @@ namespace impl
 }} // namespace s11n::impl
 //=======================================================================================
 
-
-#endif // DECODE_H
+#endif // S11N_IMPL_DECODE_H

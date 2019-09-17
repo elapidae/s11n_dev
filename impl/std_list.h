@@ -1,5 +1,5 @@
-#ifndef STD_LIST_H
-#define STD_LIST_H
+#ifndef S11N_IMPL_STD_LIST_H
+#define S11N_IMPL_STD_LIST_H
 
 #include <list>
 
@@ -18,4 +18,4 @@ namespace s11n
 }
 //=======================================================================================
 
-#endif // STD_LIST_H
+#endif // S11N_IMPL_STD_LIST_H
