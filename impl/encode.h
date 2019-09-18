@@ -92,6 +92,15 @@ namespace impl
             _tuple_writer<impl::tuple_start_idx<T>(),T>::write( val, writer );
         }
     };
+    //-----------------------------------------------------------------------------------
+    template<typename T>
+    struct _write_splitter<T, impl::type_spec::error>
+    {
+        static void write( const T& val, Writer* writer )
+        {
+            //static_assert(false, "type does not defined...");
+        }
+    };
     //===================================================================================
 
 

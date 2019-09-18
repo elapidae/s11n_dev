@@ -36,7 +36,7 @@ namespace impl
     struct _has_serial_description
             <
                 T,
-                typename std::void_t< decltype(s11n::Serial<T>::description) >
+                void_type< decltype(s11n::Serial<T>::description) >
             >
         : std::true_type
     {};

@@ -62,7 +62,7 @@ namespace impl
     struct _s_has_serial_write
         <
             SerT,
-            std::void_t
+            void_type
             <
                 decltype(s11n::Serial<SerT>::write(std::declval<SerT>(),nullptr))
             >
@@ -88,7 +88,7 @@ namespace impl
     struct _s_has_serial_read
         <
             SerT,
-            std::void_t
+            void_type
             <
                 decltype( s11n::Serial<SerT>::read(nullptr) )
             >

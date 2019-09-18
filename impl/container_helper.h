@@ -46,7 +46,7 @@ namespace impl
     struct _is_container
     <
         C,
-        std::void_t
+        void_type
         <
             decltype(std::declval<C>().begin()),
             decltype(std::declval<C>().end()),
@@ -74,7 +74,7 @@ namespace impl
     struct _is_map_set
     <
         C,
-        std::void_t
+        void_type
         <
             typename C::value_type,
             typename C::key_type,
