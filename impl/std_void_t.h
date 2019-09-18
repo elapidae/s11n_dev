@@ -12,13 +12,39 @@
 
 
 //=======================================================================================
-#ifndef void_t
-    namespace std
-    {
-        template< class... >
-        using void_t = void;
-    }
-#endif
+namespace s11n {
+namespace impl
+{
+    //===================================================================================
+    #ifdef void_t
+        //===============================================================================
+        template<typename ... Ts>
+        using void_type = std::void_t<Ts...>;
+        //===============================================================================
+    #else
+        //===============================================================================
+
+        template<class C0>
+        constexpr void _define_void_type_()
+        {
+            using sss = C0;
+        }
+
+        template< class C0, class C1, class... Cls >
+        constexpr void _define_void_type_()
+        {
+            using sss = C0;
+            _define_void_type_<C1,Cls...>();
+        }
+
+        template< class... Cls >
+        using void_type = decltype( _define_void_type_<Cls...>() );
+
+        //===============================================================================
+    #endif // if need to create own void_type...
+    //===================================================================================
+}} // namespace s11n::impl
 //=======================================================================================
+
 
 #endif // S11N_IMPL_STD_VOID_T_H

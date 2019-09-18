@@ -97,7 +97,7 @@ namespace impl
     {};
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _has_tuple_size< T, std::void_t< decltype(std::tuple_size<T>::value) >>
+    struct _has_tuple_size< T, void_type< decltype(std::tuple_size<T>::value) >>
         : std::true_type
     {};
     //-----------------------------------------------------------------------------------
@@ -133,16 +133,16 @@ namespace impl
     //===================================================================================
     template <typename T, typename = void>
     struct _has_serial_tuple
-        : std::false_type
+        : public std::false_type
     {};
     //-----------------------------------------------------------------------------------
     template <typename T>
     struct _has_serial_tuple
     <
         T,
-        std::void_t< decltype(s11n::Serial<T>::to_tuple) >
+        void_type< decltype(s11n::Serial<T>::to_tuple), serial_tuple_type<T> >
     >
-        : std::true_type
+        : public std::true_type
     {};
     //-----------------------------------------------------------------------------------
     //  Проверка, что to_tuple() возвращает какой-то кортеж.

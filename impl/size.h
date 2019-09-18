@@ -19,11 +19,11 @@ namespace impl
             : _val( val )
         {}
 
-        explicit Size( size_t val = 0 )
-            : _val( static_cast<uint32_t>(val) )
-        {
-            assert( val <= std::numeric_limits<uint32_t>::max() );
-        }
+//        explicit Size( size_t val )
+//            : _val( static_cast<uint32_t>(val) )
+//        {
+//            assert( val <= std::numeric_limits<uint32_t>::max() );
+//        }
 
         operator uint32_t() const { return _val; }
 
