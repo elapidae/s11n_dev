@@ -28,7 +28,7 @@ if ( NOT  S11N_INCLUDED )
     include_directories( "${S11N_DIR}/")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/str_view.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_void_t.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/void_type.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/crc.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/tuple_helper.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/container_helper.h")

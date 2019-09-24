@@ -1,3 +1,5 @@
 *.pro.user*
 build-*
 **.pro.user*
+
+test_s11n/form_as_one_file.cpp

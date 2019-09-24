@@ -138,7 +138,7 @@ namespace impl
     #pragma GCC diagnostic ignored "-Wunused-function"
     static crc_type calc_crc( const std::string& buf )
     {
-        uint32_t crc = crc_first_val;
+        crc_type crc = crc_first_val;
         for ( auto ch: buf )
         {
             uint8_t uch  = static_cast<uint8_t>(ch);
