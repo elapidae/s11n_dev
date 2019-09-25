@@ -63,23 +63,26 @@ namespace impl
         return true;
     }
     //===================================================================================
-    template <typename T>
+    template <typename TT>
     std::string signature()
     {
+        using T = typename std::remove_cv<TT>::type;
         static_assert( test_type<T>(), "");
         return signature_4<T>();
     }
     //-----------------------------------------------------------------------------------
-    template <typename T> constexpr
+    template <typename TT> constexpr
     crc_type calc_crc_T( crc_type prev )
     {
+        using T = typename std::remove_cv<TT>::type;
         static_assert( test_type<T>(), "");
         return calc_crc_4<T>( prev );
     }
     //-----------------------------------------------------------------------------------
-    template <typename T> constexpr
+    template <typename TT> constexpr
     crc_type signature_crc()
     {
+        using T = typename std::remove_cv<TT>::type;
         return crc_last_xor ^ calc_crc_T<T>( crc_first_val );
     }
     //===================================================================================

@@ -101,9 +101,10 @@ namespace impl
         : std::true_type
     {};
     //-----------------------------------------------------------------------------------
-    template<typename T> constexpr
+    template<typename TT> constexpr
     bool is_tuple()
     {
+        using T = typename std::remove_cv<TT>::type;
         return _has_tuple_size<T>::value &&
                !_is_array( static_cast<const T*>(nullptr) );
     }

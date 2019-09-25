@@ -22,6 +22,8 @@ namespace impl
 
     //===================================================================================
     // 1. определить укуренную реализацию, которую сожрет недо 11й компилятор.
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
     template<class T0, class ... Ts>
     struct _void_for_old_
     {
@@ -36,6 +38,7 @@ namespace impl
         using v  = void;
         using _  = T0;
     };
+    #pragma GCC diagnostic pop
     //===================================================================================
     // 2. определить промежуточный void_type через void.
     template<class ... Ts>

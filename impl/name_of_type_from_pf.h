@@ -3,6 +3,32 @@
 
 #include "impl/str_view.h"
 
+//=======================================================================================
+//  UPD 2019-09-24
+//  На старом компиляторе не работает constexpr __PRETTY_FUNC__
+//  Приходится макросню разводить, чтобы выяснить что происходит, пусть уж лучше
+//  в рантайме работает, чем ломается.
+//  Определяем пару макросов, притом проверяем наличие GNUC. Столь странно,
+//  чтобы работало на других компиляторах.
+//  Про макросы для определения компиляторов:
+/* https://blog.kowalczyk.info/article/j/
+guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html */
+#define S11N_CAN_CONSTEXPR_PRETTY_FUNC
+#ifndef __clang__
+    #ifdef __GNUC__
+        #if ( ((__GNUC__<<16) | (__GNUC_MINOR__<<8) | __GNUC_PATCHLEVEL__) < 0x050000 )
+            #undef S11N_CAN_CONSTEXPR_PRETTY_FUNC
+        #endif // version <= 5.0
+    #endif // __GNUC__
+#endif // __clang__
+
+#ifdef S11N_CAN_CONSTEXPR_PRETTY_FUNC
+    #define S11N_CONSTEXPR_PRETTY_FUNC constexpr
+#else
+    #define S11N_CONSTEXPR_PRETTY_FUNC
+#endif
+//=======================================================================================
+
 
 //=======================================================================================
 namespace s11n {
@@ -11,7 +37,8 @@ namespace impl
     //===================================================================================
     //  terminal_ch добавлен, чтобы в дальнейшем подцеплять имена контейнеров до их
     //  аргументов (до '<').
-    template <typename T> constexpr
+    template <typename T>
+    S11N_CONSTEXPR_PRETTY_FUNC
     str_view name_of_type_from_PF();
     //===================================================================================
 } // namespace impl
@@ -34,7 +61,8 @@ namespace impl
     //      __PRETTY_FUNCTION__, в ней, так или иначе, хранится имя типа.
     //      Дальнейшая задача -- выковырять это имя в compile-time.
     //
-    template <typename T> constexpr
+    template <typename T>
+    S11N_CONSTEXPR_PRETTY_FUNC
     str_view name_of_type_from_PF()
     {
         return
@@ -57,16 +85,27 @@ namespace impl
     //  Дальнейшее извлечение будет вычитать эту строку из начала.
     //
     template <typename T>
-    constexpr const char * _sign_T_PRETTY_FUNC()
+    S11N_CONSTEXPR_PRETTY_FUNC
+    const char * _sign_T_PRETTY_FUNC()
     {
         return __PRETTY_FUNCTION__;
     }
     //  Если менять имена функций и namepsace-ов, то надо руками откорректировать
     //  эту константу:
-    //      1. cout << s11n::_sign_T_PRETTY_FUNC<int>() << endl;
+    //      1. cout << s11n::impl::_sign_T_PRETTY_FUNC<int>() << endl;
     //      2. copy result until "int]";
+    #ifdef __clang__
     static constexpr auto _sign_T_preambul =
-    "constexpr const char* s11n::impl::_sign_T_PRETTY_FUNC() [with T = ";
+            "const char *s11n::impl::_sign_T_PRETTY_FUNC() [T = ";
+    #else // for gcc
+        #ifdef S11N_CAN_CONSTEXPR_PRETTY_FUNC
+            static constexpr auto _sign_T_preambul =
+            "constexpr const char* s11n::impl::_sign_T_PRETTY_FUNC() [with T = ";
+        #else
+            static constexpr auto _sign_T_preambul =
+            "const char* s11n::impl::_sign_T_PRETTY_FUNC() [with T = ";
+        #endif
+    #endif // __clang__
     //===================================================================================
     //  Возвращает указатель, следующий за паттерном.
     //  По идее, должен проверять правильность паттерна вначале. Пока не знаю как
