@@ -66,23 +66,33 @@ TEST_F( Test_s11n, name_of_containers )
     static_assert ( is_same<std::string::value_type,char>::value, "" );
     EXPECT_EQ( signature< string >(), "std::string<char>" );
 
-    EXPECT_EQ( signature< vector<bool>          >(), "std::vector<bool>"        );
-    EXPECT_EQ( signature< deque<bool>           >(), "std::deque<bool>"         );
-    EXPECT_EQ( signature< valarray<bool>        >(), "std::valarray<bool>"      );
-    EXPECT_EQ( signature< set<bool>             >(), "std::set<bool>"           );
-    EXPECT_EQ( signature< unordered_set<bool>   >(), "std::unordered_set<bool>" );
+    EXPECT_EQ( signature< vector<bool>              >(), "std::vector<bool>"        );
+    EXPECT_EQ( signature< deque<bool>               >(), "std::deque<bool>"         );
+    EXPECT_EQ( signature< valarray<bool>            >(), "std::valarray<bool>"      );
+    EXPECT_EQ( signature< unordered_set<bool>       >(), "std::unordered_set<bool>" );
+    EXPECT_EQ( signature< list<char>                >(), "std::list<char>"          );
+    EXPECT_EQ( signature< set<bool>                 >(), "std::set<bool>"           );
+    EXPECT_EQ( signature< multiset<char>            >(), "std::multiset<char>"      );
+    EXPECT_EQ( signature< unordered_set<char>       >(), "std::unordered_set<char>" );
 
+    EXPECT_EQ( signature< unordered_multiset<char>  >(),
+                    "std::unordered_multiset<char>" );
 
     // Надо делать using, иначе ломается макрос сравнения.
-    using AT  = array<bool,13>;
-    using MT  = map<int8_t,bool>;
-    using UMT = unordered_map<int8_t,bool>;
-    using LT  = list<bool>;
+    using AT   = array<bool,13>;
 
-    EXPECT_EQ( signature< AT  >(), "std::array<bool>"                );
-    EXPECT_EQ( signature< MT  >(), "std::map<{int8,bool}>"           );
-    EXPECT_EQ( signature< UMT >(), "std::unordered_map<{int8,bool}>" );
-    EXPECT_EQ( signature< LT  >(), "std::list<bool>"                 );
+    using MT   = map<int8_t,bool>;
+    using MMT  = multimap<int8_t,bool>;
+
+    using UMT  = unordered_map<int8_t,bool>;
+    using UMMT = unordered_multimap<int8_t,bool>;
+
+
+    EXPECT_EQ( signature< AT   >(), "std::array<bool>"                      );
+    EXPECT_EQ( signature< MT   >(), "std::map<{int8,bool}>"                 );
+    EXPECT_EQ( signature< MMT  >(), "std::multimap<{int8,bool}>"            );
+    EXPECT_EQ( signature< UMT  >(), "std::unordered_map<{int8,bool}>"       );
+    EXPECT_EQ( signature< UMMT >(), "std::unordered_multimap<{int8,bool}>"  );
 
     // "Не является" контейнером, т.к. не имеет метода size(). Пишите письма...
     // vdeb << signature< forward_list<bool> >();
