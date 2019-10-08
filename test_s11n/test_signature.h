@@ -59,45 +59,6 @@ TEST_F( Test_s11n, Redefined_name_of_type )
 
 
 //=======================================================================================
-struct Defined_description {};
-
-namespace s11n{
-    template<> struct Serial<Defined_description>
-    {
-        static constexpr auto description = "My description, ver. 1";
-    };
-} // s11n namespace
-
-TEST_F( Test_s11n, Defined_description )
-{
-    auto sign = "Defined_description(My description, ver. 1)";
-    EXPECT_EQ( signature<Defined_description>(), sign );
-
-    EXPECT_EQ( signature_crc<Defined_description>(), calc_crc(sign) );
-}
-//=======================================================================================
-
-//=======================================================================================
-struct Both_Name_And_Description {};
-
-namespace s11n {
-    template<> struct Serial<Both_Name_And_Description>
-    {
-        static constexpr auto name_of_type = "Имя";
-        static constexpr auto description = "Описание";
-    };
-} // s11n namespace
-
-TEST_F( Test_s11n, Both_name_description )
-{
-    auto sign = "Имя(Описание)";
-    EXPECT_EQ( signature<Both_Name_And_Description>(), sign );
-    EXPECT_EQ( signature_crc<Both_Name_And_Description>(), calc_crc(sign) );
-}
-//=======================================================================================
-
-
-//=======================================================================================
 //  For lulzzz ^_^
 namespace test_ns
 {
