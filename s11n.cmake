@@ -37,8 +37,7 @@ if ( NOT  S11N_INCLUDED )
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_1_name_of_type.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_2_metatype.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_3_description.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_4_serial_tuple.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_3_serial_tuple.h")
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/size.h")

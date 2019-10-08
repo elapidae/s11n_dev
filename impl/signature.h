@@ -1,7 +1,7 @@
 #ifndef S11N_IMPL_SIGNATURE_H
 #define S11N_IMPL_SIGNATURE_H
 
-#include "impl/signature_4_serial_tuple.h"
+#include "impl/signature_3_serial_tuple.h"
 
 //=======================================================================================
 //      signature -- сигнатура типа, что-то вроде отпечатка пальца.
@@ -68,7 +68,7 @@ namespace impl
     {
         using T = typename std::remove_cv<TT>::type;
         static_assert( test_type<T>(), "");
-        return signature_4<T>();
+        return signature_3_stuple<T>();
     }
     //-----------------------------------------------------------------------------------
     template <typename TT> constexpr
@@ -76,7 +76,7 @@ namespace impl
     {
         using T = typename std::remove_cv<TT>::type;
         static_assert( test_type<T>(), "");
-        return calc_crc_4<T>( prev );
+        return calc_crc_3_stuple<T>( prev );
     }
     //-----------------------------------------------------------------------------------
     template <typename TT> constexpr

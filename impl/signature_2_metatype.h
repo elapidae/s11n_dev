@@ -11,10 +11,10 @@ namespace impl
 {
     //===================================================================================
     template <typename T>
-    std::string signature_2();
+    std::string signature_2_metaargs();
     //===================================================================================
     template <typename T>
-    constexpr crc_type calc_crc_2( crc_type prev );
+    constexpr crc_type calc_crc_2_metaargs( crc_type prev );
     //===================================================================================
 }}
 //=======================================================================================
@@ -157,14 +157,14 @@ namespace impl
     //  without_metatype
     //===================================================================================
     template <typename T>
-    std::string signature_2()
+    std::string signature_2_metaargs()
     {
         return signature_1<T>() +
               _signature_2<T,sign_spec_2_of<T>()>::sign();
     }
     //-----------------------------------------------------------------------------------
     template <typename T>
-    constexpr crc_type calc_crc_2( crc_type prev )
+    constexpr crc_type calc_crc_2_metaargs( crc_type prev )
     {
         return _signature_2<T,sign_spec_2_of<T>()>::crc
                (
