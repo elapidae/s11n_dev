@@ -2,12 +2,6 @@
 ##
 ##  VLIBS codebase, NIIAS
 ##
-##  Authors:
-##  Alexandre Gromtsev aka elapidae     elapidae@yandex.ru
-##  Nadezhda Churikova aka claorisel    claorisel@gmail.com
-##  Ekaterina Boltenkova aka kataretta  kitkat52@yandex.ru
-##  Ivan Deylid aka sid1057             ivanov.dale@gmail.com>
-##
 ##  GNU Lesser General Public License Usage
 ##  This file may be used under the terms of the GNU Lesser General Public License
 ##  version 3 as published by the Free Software Foundation and appearing in the file
@@ -15,43 +9,47 @@
 ##  information to ensure the GNU Lesser General Public License version 3 requirements
 ##  will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
 #########################################################################################
-
-
-#========================================================================================
-# vstring.pri
-#
-#
-# Этот файл сгенерирован автоматически.
-#
-# Вносить изменения можно между строк:
-#   #<<< Start your code here
-#   Сохраненный код.
-#   #>>> Stop your code here
-# Все остальные изменения будут перезаписаны.
-#
-#========================================================================================
-
+# s11n.pri
 
 #========================================================================================
-isEmpty(qi_vstring) {
-    qi_vstring = 1;
-    isEmpty(qi_not_print_pri_messages): message("=== vstring appended ===")
+isEmpty(qi_s11n) {
+    qi_s11n = 1;
+    isEmpty(qi_not_print_pri_messages): message("=== s11n appended ===")
 
-    isEmpty(VLIBS_DIR): error("Need VLIBS_DIR correct path.")
+    isEmpty(S11N_DIR): error("Need S11N_DIR correct path.")
 
+    INCLUDEPATH += $$S11N_DIR
 
-    #<<< Start your code here -----------------------------------------------------------
-    OTHER_FILES += $$VLIBS_DIR/vstring/_vstring_impl.h
-    #>>> Stop your code here ------------------------------------------------------------
+    HEADERS += $$S11N_DIR/impl_s11n/container_helper.h
+    HEADERS += $$S11N_DIR/impl_s11n/endian.h
+    HEADERS += $$S11N_DIR/impl_s11n/metaargs_helper.h
+    HEADERS += $$S11N_DIR/impl_s11n/crc.h
+    HEADERS += $$S11N_DIR/impl_s11n/size.h
+    HEADERS += $$S11N_DIR/impl_s11n/str_view.h
+    HEADERS += $$S11N_DIR/impl_s11n/tuple_helper.h
+    HEADERS += $$S11N_DIR/impl_s11n/type_spec.h
+    HEADERS += $$S11N_DIR/impl_s11n/void_type.h
 
-    INCLUDEPATH += $$VLIBS_DIR/vstring
+    HEADERS += $$S11N_DIR/impl_s11n/reader.h
+    HEADERS += $$S11N_DIR/impl_s11n/writer.h
 
-    
-    #HEADERS     += $$VLIBS_DIR/vstring/vbufferforwardreader.h
-    HEADERS     += $$VLIBS_DIR/vstring/vstring.h
-    SOURCES     += $$VLIBS_DIR/vstring/vstring.cpp 
+    HEADERS += $$S11N_DIR/impl_s11n/decode.h
+    HEADERS += $$S11N_DIR/impl_s11n/encode.h
 
-    #SOURCES     += $$VLIBS_DIR/vstring/vbufferforwardreader.cpp
+    HEADERS += $$S11N_DIR/impl_s11n/name_of_type_from_pf.h
+
+    HEADERS += $$S11N_DIR/impl_s11n/signature_1_name_of_type.h
+    HEADERS += $$S11N_DIR/impl_s11n/signature_2_metatype.h
+    HEADERS += $$S11N_DIR/impl_s11n/signature_3_serial_tuple.h
+
+    HEADERS += $$S11N_DIR/impl_s11n/std_list.h
+    HEADERS += $$S11N_DIR/impl_s11n/std_string.h
+
+    HEADERS += $$S11N_DIR/impl_s11n/signature.h
+
+    HEADERS += $$S11N_DIR/s11n.h
+
+    LIBS += -pthread -lgtest
 }
-# vstring.pri
+# s11n.pri
 #========================================================================================
