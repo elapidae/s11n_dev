@@ -87,10 +87,10 @@ TEST_F( Test_s11n, plain_encode )
 //=======================================================================================
 TEST_F( Test_s11n, size_encode )
 {
-    s11n::impl::Size sz( 42u );
+    s11n::impl_s11n::Size sz( 42u );
     auto str = encode( sz );
 
-    auto sz2 = decode<impl::Size>( str );
+    auto sz2 = decode<impl_s11n::Size>( str );
     EXPECT_EQ( sz, sz2 );
 
     // 0x2a + 0x80 as terminal
@@ -103,11 +103,11 @@ TEST_F( Test_s11n, size_encode )
 //  Any class with fields.
 struct Own
 {
-    int32_t     a;
-    uint16_t    b;
-    char        c;
-    bool        d;
-    impl::Size  sz;
+    int32_t         a;
+    uint16_t        b;
+    char            c;
+    bool            d;
+    impl_s11n::Size sz;
 
     bool operator == ( const Own& rhs ) const
     {
@@ -129,7 +129,7 @@ namespace s11n
     template <typename> struct Serial;
     template <> struct Serial<Own>
     {
-        static std::tuple<int32_t, uint16_t, char, bool, s11n::impl::Size>
+        static std::tuple<int32_t, uint16_t, char, bool, s11n::impl_s11n::Size>
         to_tuple( const Own& own )
         {
             return make_tuple( own.a, own.b, own.c, own.d, own.sz );
@@ -139,7 +139,7 @@ namespace s11n
 //---------------------------------------------------------------------------------------
 TEST_F( Test_s11n, own_encode )
 {
-    Own o{-42, 43, 'c', true, impl::Size{12345u}};
+    Own o{-42, 43, 'c', true, impl_s11n::Size{12345u}};
 
     auto str = encode( o );
     EXPECT_EQ( to_hex(str), "d6 ff ff ff 2b 00 63 01 39 e0" );

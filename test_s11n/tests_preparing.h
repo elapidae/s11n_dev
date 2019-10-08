@@ -1,5 +1,5 @@
-#ifndef TEST_MAIN_H
-#define TEST_MAIN_H
+#ifndef TESTS_PREPARING_H
+#define TESTS_PREPARING_H
 
 //  All includes here, for any tests.
 
@@ -45,4 +45,4 @@ static s11n::crc_type own_crc()
 //=======================================================================================
 
 
-#endif //  TEST_MAIN_H
+#endif //  TESTS_PREPARING_H
