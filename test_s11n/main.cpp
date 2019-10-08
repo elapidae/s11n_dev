@@ -2,12 +2,6 @@
 **
 **  VLIBS codebase, NIIAS
 **
-**  Authors:
-**  Alexandre Gromtsev aka elapidae     elapidae@yandex.ru
-**  Nadezhda Churikova aka claorisel    claorisel@gmail.com
-**  Ekaterina Boltenkova aka kataretta  kitkat52@yandex.ru
-**  Ivan Deylid aka sid1057             ivanov.dale@gmail.com>
-**
 **  GNU Lesser General Public License Usage
 **  This file may be used under the terms of the GNU Lesser General Public License
 **  version 3 as published by the Free Software Foundation and appearing in the file
@@ -16,11 +10,27 @@
 **  will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
 ****************************************************************************************/
 
-#include "test_main.h"
+#include "tests_preparing.h"
 
 #include "test_plains.h"
+#include "test_metaargs.h"
+#include "test_name_of_type.h"
+#include "test_container_names.h"
 #include "test_signature.h"
+
 #include "test_encoder.h"
+
+
+
+//=======================================================================================
+template <class> class TD;
+TEST_F( Test_s11n, fake_develop )
+{
+
+}
+//=======================================================================================
+
+
 
 using namespace std;
 using namespace s11n;

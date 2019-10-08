@@ -36,4 +36,13 @@ class Test_s11n: public testing::Test {};
 //  GTest macros give this warning. Kill it for all tests...
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 
+//=======================================================================================
+template<typename T>
+static s11n::crc_type own_crc()
+{
+    return s11n::calc_crc( s11n::signature<T>() );
+}
+//=======================================================================================
+
+
 #endif //  TEST_MAIN_H
