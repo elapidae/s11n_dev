@@ -13,10 +13,13 @@ include( "${S11N_DIR}/s11n.cmake" )
 add_executable( ${PROJECT_NAME}
                 ${S11N_HEADERS}
                 main.cpp
-                test_main.h
+                tests_preparing.h
                 test_plains.h
                 test_signature.h
-                test_encoder.h )
+                test_encoder.h
+                test_metaargs.h
+                test_name_of_type.h
+                test_container_names.h )
 
 
 target_link_libraries( ${PROJECT_NAME}

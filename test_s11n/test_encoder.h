@@ -1,4 +1,4 @@
-#include "test_main.h"
+#include "tests_preparing.h"
 
 using namespace s11n;
 using namespace std;
