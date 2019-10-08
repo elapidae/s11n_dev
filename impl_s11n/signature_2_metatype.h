@@ -2,8 +2,8 @@
 #define S11N_IMPL_SIGNATURE_2_METAARGS_H
 
 
-#include "impl/signature_1_name_of_type.h"
-#include "impl/metaargs_helper.h"
+#include "impl_s11n/signature_1_name_of_type.h"
+#include "impl_s11n/metaargs_helper.h"
 
 //=======================================================================================
 namespace s11n {

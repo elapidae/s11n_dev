@@ -1,11 +1,11 @@
 #ifndef S11N_IMPL_SIGNATURE_1_NAME_OF_TYPE_H
 #define S11N_IMPL_SIGNATURE_1_NAME_OF_TYPE_H
 
-#include "impl/crc.h"
-#include "impl/name_of_type_from_pf.h"
-#include "impl/tuple_helper.h"
-#include "impl/container_helper.h"
-#include "impl/metaargs_helper.h"
+#include "impl_s11n/crc.h"
+#include "impl_s11n/name_of_type_from_pf.h"
+#include "impl_s11n/tuple_helper.h"
+#include "impl_s11n/container_helper.h"
+#include "impl_s11n/metaargs_helper.h"
 
 
 //=======================================================================================

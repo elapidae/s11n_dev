@@ -1,7 +1,7 @@
 #ifndef S11N_IMPL_NAME_OF_TYPE_FROM_PF_H
 #define S11N_IMPL_NAME_OF_TYPE_FROM_PF_H
 
-#include "impl/str_view.h"
+#include "impl_s11n/str_view.h"
 
 //=======================================================================================
 //  UPD 2019-09-24

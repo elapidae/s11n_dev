@@ -1,8 +1,8 @@
 #ifndef S11N_IMPL_TYPE_SPEC_H
 #define S11N_IMPL_TYPE_SPEC_H
 
-#include "impl/tuple_helper.h"
-#include "impl/container_helper.h"
+#include "impl_s11n/tuple_helper.h"
+#include "impl_s11n/container_helper.h"
 
 //=======================================================================================
 //      Специализация типа нужна, чтобы специализироваться на Encoder/Decoder.

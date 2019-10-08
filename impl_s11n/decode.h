@@ -1,9 +1,9 @@
 #ifndef S11N_IMPL_DECODE_H
 #define S11N_IMPL_DECODE_H
 
-#include "impl/reader.h"
-#include "impl/type_spec.h"
-#include "impl/size.h"
+#include "impl_s11n/reader.h"
+#include "impl_s11n/type_spec.h"
+#include "impl_s11n/size.h"
 
 
 //=======================================================================================

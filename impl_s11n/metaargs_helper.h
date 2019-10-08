@@ -1,7 +1,7 @@
 #ifndef S11N_IMPL_METAARGS_HELPER_H
 #define S11N_IMPL_METAARGS_HELPER_H
 
-#include "impl/crc.h"
+#include "impl_s11n/crc.h"
 
 //=======================================================================================
 namespace s11n {

@@ -1,7 +1,7 @@
 #ifndef S11N_IMPL_CRC_H
 #define S11N_IMPL_CRC_H
 
-#include "impl/str_view.h"
+#include "impl_s11n/str_view.h"
 
 
 //=======================================================================================

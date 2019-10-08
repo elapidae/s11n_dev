@@ -2,7 +2,7 @@
 #define S11N_IMPL_WRITER_H
 
 #include <string>
-#include "impl/endian.h"
+#include "impl_s11n/endian.h"
 
 
 //=======================================================================================

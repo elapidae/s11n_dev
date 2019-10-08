@@ -4,7 +4,7 @@
 #include <utility>      // for std::forward
 #include <type_traits>
 
-#include "impl/void_type.h"
+#include "impl_s11n/void_type.h"
 
 //=======================================================================================
 namespace s11n {

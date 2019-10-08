@@ -1,9 +1,9 @@
 #ifndef S11N_IMPL_ENCODE_H
 #define S11N_IMPL_ENCODE_H
 
-#include "impl/writer.h"
-#include "impl/type_spec.h"
-#include "impl/size.h"
+#include "impl_s11n/writer.h"
+#include "impl_s11n/type_spec.h"
+#include "impl_s11n/size.h"
 
 //=======================================================================================
 namespace s11n {
@@ -76,7 +76,7 @@ namespace impl
     struct _write_splitter<T, impl::type_spec::as_container>
     {
         static void write( const T& val, Writer* writer )
-        {            
+        {
             encode( Size(val.size()), writer );
 
             for ( const auto & elem: val )

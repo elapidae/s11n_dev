@@ -1,13 +1,13 @@
 #ifndef S11N_H
 #define S11N_H
 
-#include "impl/std_string.h"
-#include "impl/std_list.h"
+#include "impl_s11n/std_string.h"
+#include "impl_s11n/std_list.h"
 
-#include "impl/signature.h"
+#include "impl_s11n/signature.h"
 
-#include "impl/encode.h"
-#include "impl/decode.h"
+#include "impl_s11n/encode.h"
+#include "impl_s11n/decode.h"
 
 
 //=======================================================================================

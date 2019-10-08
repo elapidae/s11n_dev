@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "impl/size.h"
-#include "impl/encode.h"
-#include "impl/decode.h"
-#include "impl/size.h"
+#include "impl_s11n/size.h"
+#include "impl_s11n/encode.h"
+#include "impl_s11n/decode.h"
+#include "impl_s11n/size.h"
 
 //=======================================================================================
 //  По умолчанию перегружен Serial<std::string>, иначе выведется истинный тип строки:

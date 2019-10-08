@@ -4,7 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <string.h> // for memcpy
-#include "impl/endian.h"
+#include "impl_s11n/endian.h"
 
 //=======================================================================================
 namespace s11n {

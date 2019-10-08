@@ -27,29 +27,29 @@ if ( NOT  S11N_INCLUDED )
 
     include_directories( "${S11N_DIR}/")
 
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/str_view.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/void_type.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/crc.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/tuple_helper.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/container_helper.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/name_of_type_from_pf.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/metaargs_helper.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/str_view.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/void_type.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/crc.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/tuple_helper.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/container_helper.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/name_of_type_from_pf.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/metaargs_helper.h")
 
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_1_name_of_type.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_2_metatype.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature_3_serial_tuple.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/signature.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/signature_1_name_of_type.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/signature_2_metatype.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/signature_3_serial_tuple.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/signature.h")
 
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/size.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/size.h")
 
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/reader.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/writer.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/reader.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/writer.h")
 
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/encode.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/decode.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/encode.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/decode.h")
 
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_string.h")
-    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl/std_list.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/std_string.h")
+    set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/impl_s11n/std_list.h")
 
     set(S11N_HEADERS ${S11N_HEADERS} "${S11N_DIR}/s11n.h")
 

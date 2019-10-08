@@ -3,8 +3,8 @@
 
 #include <assert.h>
 #include <limits>
-#include "impl/writer.h"
-#include "impl/reader.h"
+#include "impl_s11n/writer.h"
+#include "impl_s11n/reader.h"
 
 
 //=======================================================================================
