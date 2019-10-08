@@ -24,7 +24,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     enum class type_spec { as_plain,
@@ -38,7 +38,7 @@ namespace impl
     template<typename T> constexpr
     type_spec type_spec_of();
     //===================================================================================
-}} // s11n::impl namespaces
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -50,7 +50,7 @@ namespace impl
 //      type_spec_of<T>()
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     //      Has Serial<T>::write
@@ -138,12 +138,12 @@ namespace impl
     template<typename T> constexpr
     type_spec _type_spec_of()
     {
-        return std::is_arithmetic<T>::value     ? type_spec::as_plain
-             : impl::has_serial_read_write<T>() ? type_spec::as_own_read_write
-             : impl::has_serial_tuple<T>()      ? type_spec::as_serial_tuple
-             : impl::is_container<T>()          ? type_spec::as_container
-             : impl::is_tuple<T>()              ? type_spec::as_tuple
-                                                : type_spec::error;
+        return std::is_arithmetic<T>::value ? type_spec::as_plain
+             : has_serial_read_write<T>()   ? type_spec::as_own_read_write
+             : has_serial_tuple<T>()        ? type_spec::as_serial_tuple
+             : is_container<T>()            ? type_spec::as_container
+             : is_tuple<T>()                ? type_spec::as_tuple
+                                            : type_spec::error;
     }
     //===================================================================================
     template<typename T> constexpr
@@ -155,8 +155,7 @@ namespace impl
         return _type_spec_of<T>();
     }
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_TYPE_SPEC_H

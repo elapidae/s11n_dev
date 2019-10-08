@@ -21,16 +21,16 @@ namespace s11n
     {
         static constexpr auto name_of_type = "std::string";
 
-        static void write( const std::string& str, impl::Writer* writer )
+        static void write( const std::string& str, impl_s11n::Writer* writer )
         {
-            using namespace s11n::impl;
-            encode( Size(str.size()), writer );
+            using namespace s11n::impl_s11n;
+            encode( Size(uint32_t(str.size())), writer );
             writer->write_str( str );
         }
 
-        static std::string read( impl::Reader* reader )
+        static std::string read( impl_s11n::Reader* reader )
         {
-            using namespace s11n::impl;
+            using namespace s11n::impl_s11n;
             auto size = decode<Size>( reader );
             return reader->read_str( size );
         }

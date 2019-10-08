@@ -13,7 +13,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     // 1. определить укуренную реализацию, которую сожрёт недо 11й компилятор.
     // 2. определить промежуточный void_type через void.
@@ -81,12 +81,12 @@ namespace impl
     template<class ... Ts>
     using void_type = typename std::conditional
         <
-            impl::_may_void_is_adequate(),
+            impl_s11n::_may_void_is_adequate(),
             void,
-            typename impl::_void_for_old_<Ts...>::v
+            typename impl_s11n::_void_for_old_<Ts...>::v
         >::type;
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_VOID_TYPE_H

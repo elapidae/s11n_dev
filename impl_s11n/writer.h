@@ -7,7 +7,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     class Writer
@@ -24,7 +24,7 @@ namespace impl
         std::string _buffer;
     };
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -32,20 +32,20 @@ namespace impl
 //      Implementation
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename T> typename std::enable_if< std::is_arithmetic<T>::value,
     void>::type Writer::write( T val )
     {
-        val = impl::little_endian( val );
+        val = little_endian( val );
 
         auto *ch = static_cast<char*>( static_cast<void*>(&val) );
 
         _buffer.append( ch, sizeof(val) );
     }
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_WRITER_H

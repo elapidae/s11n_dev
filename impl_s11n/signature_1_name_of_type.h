@@ -16,7 +16,7 @@
 //      elsewhere using name of type from __PRETTY_FUNCTION__
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template <typename T>
@@ -25,7 +25,7 @@ namespace impl
     template <typename T>
     constexpr crc_type calc_crc_1( crc_type prev );
     //===================================================================================
-}}
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -36,7 +36,7 @@ namespace impl
 namespace s11n { template <typename T> struct Serial; }
 //===================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     //  Forward declarations
@@ -94,18 +94,18 @@ namespace impl
     template <typename T> constexpr
     sign_spec_1 sign_spec_1_of()
     {
-        return    std::is_arithmetic<T>::value        ? sign_spec_1::as_plain
-                : impl::has_serial_name_of_type<T>()  ? sign_spec_1::as_own_name_of_type
-                : impl::is_tuple<T>()                 ? sign_spec_1::as_tuple
-                                                      : sign_spec_1::as_pretty_func;
+        return    std::is_arithmetic<T>::value  ? sign_spec_1::as_plain
+                : has_serial_name_of_type<T>()  ? sign_spec_1::as_own_name_of_type
+                : is_tuple<T>()                 ? sign_spec_1::as_tuple
+                                                : sign_spec_1::as_pretty_func;
     }
     //===================================================================================
-    template <typename T, impl::sign_spec_1>
+    template <typename T, sign_spec_1>
     struct _signature_1;
     //===================================================================================
     //  as plain
     template <typename T>
-    struct _signature_1<T, impl::sign_spec_1::as_plain>
+    struct _signature_1<T, sign_spec_1::as_plain>
     {
         //-------------------------------------------------------------------------------
         static constexpr str_view name_of_type()
@@ -119,22 +119,22 @@ namespace impl
             using TT = typename std::remove_cv<T>::type;
 
             return
-                std::is_same<char,TT>::value     ? impl::str_view{"char", 4}    :
-                std::is_same<bool,TT>::value     ? impl::str_view{"bool", 4}    :
+                std::is_same<char,TT>::value     ? str_view{"char", 4}    :
+                std::is_same<bool,TT>::value     ? str_view{"bool", 4}    :
 
-                std::is_same<int8_t,TT>::value   ? impl::str_view{"int8", 4}    :
-                std::is_same<int16_t,TT>::value  ? impl::str_view{"int16", 5}   :
-                std::is_same<int32_t,TT>::value  ? impl::str_view{"int32", 5}   :
-                std::is_same<int64_t,TT>::value  ? impl::str_view{"int64", 5}   :
+                std::is_same<int8_t,TT>::value   ? str_view{"int8", 4}    :
+                std::is_same<int16_t,TT>::value  ? str_view{"int16", 5}   :
+                std::is_same<int32_t,TT>::value  ? str_view{"int32", 5}   :
+                std::is_same<int64_t,TT>::value  ? str_view{"int64", 5}   :
 
-                std::is_same<uint8_t,TT>::value  ? impl::str_view{"uint8", 5}   :
-                std::is_same<uint16_t,TT>::value ? impl::str_view{"uint16", 6}  :
-                std::is_same<uint32_t,TT>::value ? impl::str_view{"uint32", 6}  :
-                std::is_same<uint64_t,TT>::value ? impl::str_view{"uint64", 6}  :
+                std::is_same<uint8_t,TT>::value  ? str_view{"uint8", 5}   :
+                std::is_same<uint16_t,TT>::value ? str_view{"uint16", 6}  :
+                std::is_same<uint32_t,TT>::value ? str_view{"uint32", 6}  :
+                std::is_same<uint64_t,TT>::value ? str_view{"uint64", 6}  :
 
-                std::is_same<float,TT>::value    ? impl::str_view{"float32", 7} :
-                std::is_same<double,TT>::value   ? impl::str_view{"float64", 7} :
-                                                   impl::str_view{"", 0};
+                std::is_same<float,TT>::value    ? str_view{"float32", 7} :
+                std::is_same<double,TT>::value   ? str_view{"float64", 7} :
+                                                   str_view{"", 0};
         }
         //-------------------------------------------------------------------------------
         static std::string sign()
@@ -158,7 +158,7 @@ namespace impl
     //===================================================================================
     //  as_own_name_of_type
     template <typename T>
-    struct _signature_1<T, impl::sign_spec_1::as_own_name_of_type>
+    struct _signature_1<T, sign_spec_1::as_own_name_of_type>
     {
         //-------------------------------------------------------------------------------
         static constexpr str_view name_of_type()
@@ -185,7 +185,7 @@ namespace impl
     //===================================================================================
     //  as_tuple
     template <typename T>
-    struct _signature_1<T, impl::sign_spec_1::as_tuple>
+    struct _signature_1<T, sign_spec_1::as_tuple>
     {
         //-------------------------------------------------------------------------------
         static std::string sign()
@@ -209,7 +209,7 @@ namespace impl
     //===================================================================================
     //  as_pretty_func
     template <typename T>
-    struct _signature_1<T, impl::sign_spec_1::as_pretty_func>
+    struct _signature_1<T, sign_spec_1::as_pretty_func>
     {
         //-------------------------------------------------------------------------------
         static constexpr str_view name_of_type()
@@ -244,8 +244,7 @@ namespace impl
     //===================================================================================
     //      signature_1
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 

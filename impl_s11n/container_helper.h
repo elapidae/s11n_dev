@@ -8,7 +8,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename C> constexpr
@@ -25,8 +25,7 @@ namespace impl
     typename std::enable_if<is_map_set<Cont>(), void>::type
     container_append( Cont* c, Value && val );
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -34,7 +33,7 @@ namespace impl
 //      Implementation
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename C, typename = void>
@@ -110,8 +109,7 @@ namespace impl
         c->insert( std::forward<Value>(val) );
     }
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_CONTAINER_HELPER

@@ -8,7 +8,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename T>
@@ -17,13 +17,13 @@ namespace impl
     template<typename T>
     T decode( const std::string& buf );
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<int idx, typename Res, typename Tuple, typename ... Es>
@@ -46,8 +46,8 @@ namespace impl
     {
         static Res read( Reader* reader, Es&& ... es )
         {
-            constexpr auto next_idx = impl::tuple_next_idx<idx,Tuple>();
-            using val_type = impl::tuple_element<Tuple,idx>;
+            constexpr auto next_idx = tuple_next_idx<idx,Tuple>();
+            using val_type = tuple_element<Tuple,idx>;
             using next = _tuple_reader<next_idx, Tuple, Res, Es..., val_type>;
 
             auto val = decode<val_type>( reader );
@@ -61,11 +61,11 @@ namespace impl
 
     //===================================================================================
     //  reader joiner
-    template<typename T, impl::type_spec>
+    template<typename T, type_spec>
     struct _read_joiner;
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _read_joiner<T,impl::type_spec::as_plain>
+    struct _read_joiner<T,type_spec::as_plain>
     {
         static T read( Reader* reader )
         {
@@ -74,7 +74,7 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _read_joiner<T,impl::type_spec::as_own_read_write>
+    struct _read_joiner<T,type_spec::as_own_read_write>
     {
         static T read( Reader* reader )
         {
@@ -83,18 +83,18 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _read_joiner<T,impl::type_spec::as_serial_tuple>
+    struct _read_joiner<T,type_spec::as_serial_tuple>
     {
         static T read( Reader* reader )
         {
-            using Tuple = impl::serial_tuple_type<T>;
-            constexpr auto idx = impl::tuple_start_idx<Tuple>();
+            using Tuple = serial_tuple_type<T>;
+            constexpr auto idx = tuple_start_idx<Tuple>();
             return _tuple_reader<idx,Tuple,T>::read( reader );
         }
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _read_joiner<T,impl::type_spec::as_container>
+    struct _read_joiner<T,type_spec::as_container>
     {
         static T read( Reader* reader )
         {
@@ -103,18 +103,18 @@ namespace impl
             T res;  // Can reserve needed size;
             using elem_type = typename T::value_type;
             while ( sz-- )
-                impl::container_append( &res, std::move(decode<elem_type>(reader)) );
+                container_append( &res, std::move(decode<elem_type>(reader)) );
 
             return res;
         }
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _read_joiner<T,impl::type_spec::as_tuple>
+    struct _read_joiner<T,type_spec::as_tuple>
     {
         static T read( Reader* reader )
         {
-            constexpr auto idx = impl::tuple_start_idx<T>();
+            constexpr auto idx = tuple_start_idx<T>();
             return _tuple_reader<idx,T,T>::read( reader );
         }
     };
@@ -127,7 +127,7 @@ namespace impl
     template<typename T>
     T decode( Reader* reader )
     {
-        return _read_joiner<T, impl::type_spec_of<T>()>::read( reader );
+        return _read_joiner<T, type_spec_of<T>()>::read( reader );
     }
     //-----------------------------------------------------------------------------------
     template<typename T>
@@ -142,7 +142,7 @@ namespace impl
     }
     //  decode
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_DECODE_H

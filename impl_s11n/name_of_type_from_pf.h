@@ -32,7 +32,7 @@ guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html */
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     //  terminal_ch добавлен, чтобы в дальнейшем подцеплять имена контейнеров до их
@@ -41,8 +41,7 @@ namespace impl
     S11N_CONSTEXPR_PRETTY_FUNC
     str_view name_of_type_from_PF();
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -50,7 +49,7 @@ namespace impl
 //      Implementation
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template <typename T> static constexpr const char* _pos_T_in_pattern();
@@ -92,18 +91,18 @@ namespace impl
     }
     //  Если менять имена функций и namepsace-ов, то надо руками откорректировать
     //  эту константу:
-    //      1. cout << s11n::impl::_sign_T_PRETTY_FUNC<int>() << endl;
+    //      1. cout << s11n::impl_s11n::_sign_T_PRETTY_FUNC<int>() << endl;
     //      2. copy result until "int]";
     #ifdef __clang__
     static constexpr auto _sign_T_preambul =
-            "const char *s11n::impl::_sign_T_PRETTY_FUNC() [T = ";
+            "const char *s11n::impl_s11n::_sign_T_PRETTY_FUNC() [T = ";
     #else // for gcc
         #ifdef S11N_CAN_CONSTEXPR_PRETTY_FUNC
             static constexpr auto _sign_T_preambul =
-            "constexpr const char* s11n::impl::_sign_T_PRETTY_FUNC() [with T = ";
+            "constexpr const char* s11n::impl_s11n::_sign_T_PRETTY_FUNC() [with T = ";
         #else
             static constexpr auto _sign_T_preambul =
-            "const char* s11n::impl::_sign_T_PRETTY_FUNC() [with T = ";
+            "const char* s11n::impl_s11n::_sign_T_PRETTY_FUNC() [with T = ";
         #endif
     #endif // __clang__
     //===================================================================================
@@ -126,7 +125,7 @@ namespace impl
         return _advance_along_substr( _sign_T_PRETTY_FUNC<T>(), _sign_T_preambul );
     }
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_NAME_OF_TYPE_FROM_PF_H

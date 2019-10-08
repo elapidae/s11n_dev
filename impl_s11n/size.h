@@ -9,7 +9,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     class Size
@@ -19,20 +19,13 @@ namespace impl
             : _val( val )
         {}
 
-//        explicit Size( size_t val )
-//            : _val( static_cast<uint32_t>(val) )
-//        {
-//            assert( val <= std::numeric_limits<uint32_t>::max() );
-//        }
-
         operator uint32_t() const { return _val; }
 
     private:
         uint32_t _val;
     };
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -45,10 +38,10 @@ namespace s11n
 
     //===================================================================================
     template<>
-    struct Serial< impl::Size >
+    struct Serial< impl_s11n::Size >
     {
         //===============================================================================
-        static void write( const impl::Size& sz_, impl::Writer* w )
+        static void write( const impl_s11n::Size& sz_, impl_s11n::Writer* w )
         {
             uint32_t sz = sz_;
             do
@@ -66,7 +59,7 @@ namespace s11n
         //===============================================================================
 
         //===============================================================================
-        static impl::Size read( impl::Reader* reader )
+        static impl_s11n::Size read( impl_s11n::Reader* reader )
         {
             uint32_t res        = 0;
             int      shift      = 0;
@@ -76,7 +69,7 @@ namespace s11n
             do
             {
                 if ( ++pos_watch > 5 )
-                    throw impl::Reader::out_of_size( "Size out" );
+                    throw impl_s11n::Reader::out_of_size( "Size out" );
 
                 uint32_t cur = reader->read<uint8_t>();
                 stop = cur & 0x80;
@@ -87,10 +80,10 @@ namespace s11n
             }
             while( !stop );
 
-            return impl::Size{res};
+            return impl_s11n::Size{res};
         } // read
         //===============================================================================
-    }; // struct Serial< impl::Size >
+    }; // struct Serial< impl_s11n::Size >
     //===================================================================================
 } // namespace s11n
 //=======================================================================================

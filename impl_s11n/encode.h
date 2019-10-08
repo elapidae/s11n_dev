@@ -7,7 +7,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename T>
@@ -16,7 +16,7 @@ namespace impl
     template<typename T>
     void encode( const T& val, Writer* writer );
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -24,7 +24,7 @@ namespace impl
 //      Implementation
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename T>
@@ -36,7 +36,7 @@ namespace impl
 
 
     //===================================================================================
-    template<typename T, impl::type_spec>
+    template<typename T, type_spec>
     struct _write_splitter;
     //===================================================================================
     template<int idx, typename Tuple>
@@ -46,7 +46,7 @@ namespace impl
 
     //===================================================================================
     template<typename T>
-    struct _write_splitter<T, impl::type_spec::as_plain>
+    struct _write_splitter<T, type_spec::as_plain>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -55,7 +55,7 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _write_splitter<T, impl::type_spec::as_own_read_write>
+    struct _write_splitter<T, type_spec::as_own_read_write>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -64,7 +64,7 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _write_splitter<T, impl::type_spec::as_serial_tuple>
+    struct _write_splitter<T, type_spec::as_serial_tuple>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -73,7 +73,7 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _write_splitter<T, impl::type_spec::as_container>
+    struct _write_splitter<T, type_spec::as_container>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -85,16 +85,16 @@ namespace impl
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _write_splitter<T, impl::type_spec::as_tuple>
+    struct _write_splitter<T, type_spec::as_tuple>
     {
         static void write( const T& val, Writer* writer )
         {
-            _tuple_writer<impl::tuple_start_idx<T>(),T>::write( val, writer );
+            _tuple_writer<tuple_start_idx<T>(),T>::write( val, writer );
         }
     };
     //-----------------------------------------------------------------------------------
     template<typename T>
-    struct _write_splitter<T, impl::type_spec::error>
+    struct _write_splitter<T, type_spec::error>
     {
         static void write( const T& val, Writer* writer )
         {
@@ -115,7 +115,7 @@ namespace impl
 
             encode( val, writer );
 
-            constexpr auto next_idx = impl::tuple_next_idx<idx,Tuple>();
+            constexpr auto next_idx = tuple_next_idx<idx,Tuple>();
             _tuple_writer<next_idx,Tuple>::write( tupl, writer );
         }
     };
@@ -142,10 +142,10 @@ namespace impl
     template<typename T>
     void encode( const T& val, Writer* writer )
     {
-        _write_splitter<T,impl::type_spec_of<T>()>::write( val, writer );
+        _write_splitter<T,type_spec_of<T>()>::write( val, writer );
     }
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_ENCODE_H

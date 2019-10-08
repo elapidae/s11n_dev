@@ -7,7 +7,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template <typename T>
@@ -16,7 +16,7 @@ namespace impl
     template <typename T>
     constexpr crc_type calc_crc_2_metaargs( crc_type prev );
     //===================================================================================
-}}
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -25,7 +25,7 @@ namespace impl
 //      Implementation
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     //  signature_2: signature_1 + metaargs
@@ -59,18 +59,18 @@ namespace impl
     template <typename T> constexpr
     sign_spec_2 sign_spec_2_of()
     {
-        return is_tuple<T>()          ? sign_spec_2::as_tuple
-            : impl::is_container<T>() ? sign_spec_2::as_container
-            : impl::is_metatype<T>()  ? sign_spec_2::as_any_metatype
-                                      : sign_spec_2::without_metatype;
+        return is_tuple<T>()    ? sign_spec_2::as_tuple
+            : is_container<T>() ? sign_spec_2::as_container
+            : is_metatype<T>()  ? sign_spec_2::as_any_metatype
+                                : sign_spec_2::without_metatype;
     }
     //===================================================================================
-    template <typename T, impl::sign_spec_2>
+    template <typename T, sign_spec_2>
     struct _signature_2;
     //===================================================================================
     //  as_tuple
     template <typename T>
-    struct _signature_2<T, impl::sign_spec_2::as_tuple>
+    struct _signature_2<T, sign_spec_2::as_tuple>
     {
         //-------------------------------------------------------------------------------
         static std::string sign()
@@ -88,7 +88,7 @@ namespace impl
     //===================================================================================
     //  as_container
     template <typename T>
-    struct _signature_2<T, impl::sign_spec_2::as_container>
+    struct _signature_2<T, sign_spec_2::as_container>
     {
         //-------------------------------------------------------------------------------
         using _vt = typename T::value_type;
@@ -96,7 +96,7 @@ namespace impl
         static std::string sign()
         {
             return std::string("<") +
-                   impl::signature<_vt>() +
+                   signature<_vt>() +
                    std::string(">");
         }
         //-------------------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace impl
     //-----------------------------------------------------------------------------------
     //  _signature_2
     template <typename T>
-    struct _signature_2<T, impl::sign_spec_2::as_any_metatype>
+    struct _signature_2<T, sign_spec_2::as_any_metatype>
     {
         //-------------------------------------------------------------------------------
         static std::string sign()
@@ -140,7 +140,7 @@ namespace impl
     //===================================================================================
     //  without_metatype
     template <typename T>
-    struct _signature_2<T, impl::sign_spec_2::without_metatype>
+    struct _signature_2<T, sign_spec_2::without_metatype>
     {
         //-------------------------------------------------------------------------------
         static std::string sign()
@@ -174,7 +174,7 @@ namespace impl
     //===================================================================================
     //      signature_2
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_SIGNATURE_2_METAARGS_H

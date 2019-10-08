@@ -19,22 +19,22 @@ namespace s11n
     template<typename T>
     std::string signature()
     {
-        return impl::signature<T>();
+        return impl_s11n::signature<T>();
     }
     //===================================================================================
     template<typename T> constexpr
     uint32_t signature_crc()
     {
-        return impl::signature_crc<T>();
+        return impl_s11n::signature_crc<T>();
     }
     //===================================================================================
-    using impl::calc_crc;   //  ( const std::string& );
-    using impl::crc_type;
+    using impl_s11n::calc_crc;   //  ( const std::string& );
+    using impl_s11n::crc_type;
     //===================================================================================
-    using impl::encode;     //  std::string encode( const T& val );
+    using impl_s11n::encode;     //  std::string encode( const T& val );
                             //  void encode( const T& val, Writer* writer );
     //===================================================================================
-    using impl::decode;     //  T decode( Reader* reader );
+    using impl_s11n::decode;     //  T decode( Reader* reader );
                             //  T decode( const std::string& buf );
     //===================================================================================
 } // namespace s11n

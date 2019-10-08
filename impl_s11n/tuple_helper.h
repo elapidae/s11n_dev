@@ -35,7 +35,7 @@
 namespace s11n { template<typename> struct Serial; }
 
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename T> constexpr
@@ -61,7 +61,7 @@ namespace impl
     template<int idx, typename T> constexpr
     int tuple_next_idx();
     //===================================================================================
-}}
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
@@ -73,7 +73,7 @@ namespace s11n { template <typename> struct Serial; }
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     //      is_tuple<T>() use as marker with signatures.
@@ -175,8 +175,7 @@ namespace impl
         return _has_serial_tuple<T>::value;
     }
     //===================================================================================
-} // namespace impl
-} // namespace s11n
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_TUPLE_HELPER_H

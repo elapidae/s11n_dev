@@ -5,7 +5,7 @@
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template< template<typename...> class MetaT, typename ... Args >
@@ -14,14 +14,14 @@ namespace impl
     template< template<typename...> class MetaT, typename ... Args >
     constexpr crc_type calc_crc_metaargs( const MetaT<Args...>*, crc_type prev );
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 
 
 //=======================================================================================
 namespace s11n {
-namespace impl
+namespace impl_s11n
 {
     //===================================================================================
     template<typename T>
@@ -44,7 +44,7 @@ namespace impl
         static std::string sign( bool first = true )
         {
             return std::string(first ? "" : ",") +
-                   impl::signature<T1>() +
+                   impl_s11n::signature<T1>() +
                    _signature_metaargs<Args...>::sign( false );
         }
         //-------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace impl
     }
     //  signature of args
     //===================================================================================
-}} // namespace s11n::impl
+}} // namespace s11n::impl_s11n
 //=======================================================================================
 
 #endif // S11N_IMPL_METAARGS_HELPER_H
