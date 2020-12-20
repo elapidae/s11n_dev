@@ -1,7 +1,15 @@
 #ifndef S11N_IMPL_ENDIAN_H
 #define S11N_IMPL_ENDIAN_H
 
-#include <endian.h>
+#ifndef __WIN32
+    #include <endian.h>
+#else
+    #define BIG_ENDIAN    0
+    #define LITTLE_ENDIAN 1
+
+    #define BYTE_ORDER LITTLE_ENDIAN
+#endif
+
 #include <type_traits>
 
 

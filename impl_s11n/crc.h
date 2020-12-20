@@ -117,7 +117,9 @@ namespace impl_s11n
     }
     //-----------------------------------------------------------------------------------
     //  Итерации внутри строки.
-    constexpr crc_type _crc_str_recurse( const str_view& str, uint pos, crc_type prev )
+    constexpr crc_type _crc_str_recurse( const str_view& str,
+                                         unsigned int pos,
+                                         crc_type prev )
     {
         return pos == str.len
                     ? prev
